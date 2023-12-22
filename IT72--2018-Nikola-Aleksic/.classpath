@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="DizajnerskiObrasci/src"/>
+	<classpathentry kind="lib" path="C:/Users/Korisnik/Desktop/Dizajnerski/IT72--2018-Nikola-Aleksic/DizajnerskiObrasci/src/heksagon.jar"/>
+	<classpathentry kind="output" path="DizajnerskiObrasci/bin"/>
+</classpath>
