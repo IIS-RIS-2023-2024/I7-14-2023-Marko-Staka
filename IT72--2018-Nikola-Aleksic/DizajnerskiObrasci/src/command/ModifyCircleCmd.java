@@ -4,9 +4,9 @@ import geometry.Circle;
 
 public class ModifyCircleCmd implements Command{
 
-	private Circle oldState;
-	private Circle newState;
-	private Circle original = new Circle();
+	private static Circle oldState;
+	private static Circle newState;
+	private static Circle original = new Circle();
 
 	public ModifyCircleCmd(Circle oldState, Circle newState) {
 		this.oldState = oldState;

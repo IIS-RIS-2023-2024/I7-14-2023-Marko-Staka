@@ -1,2 +1,6 @@
 /tests/
-/jar/
+/dialogues/
+/geometry/
+/mvc/
+/command/
+/adapter/

@@ -4,9 +4,9 @@ import geometry.Donut;
 
 public class ModifyDonutCmd implements Command{
 
-	private Donut oldState;
-	private Donut newState;
-	private Donut original = new Donut();
+	private static Donut oldState;
+	private static Donut newState;
+	private static Donut original = new Donut();
 
 	public ModifyDonutCmd(Donut oldState, Donut newState) {
 		this.oldState = oldState;

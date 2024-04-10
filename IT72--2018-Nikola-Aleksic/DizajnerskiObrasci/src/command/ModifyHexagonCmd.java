@@ -4,9 +4,9 @@ import adapter.HexagonAdapter;
 
 public class ModifyHexagonCmd implements Command{
 
-	private HexagonAdapter oldState;
-	private HexagonAdapter newState;
-	private HexagonAdapter original = new HexagonAdapter();
+	private static HexagonAdapter oldState;
+	private static HexagonAdapter newState;
+	private static HexagonAdapter original = new HexagonAdapter();
 	
 	public ModifyHexagonCmd(HexagonAdapter oldState, HexagonAdapter newState) {
 		this.oldState = oldState;

@@ -4,9 +4,9 @@ import geometry.Rectangle;
 
 public class ModifyRectangleCmd implements Command{
 
-	private Rectangle oldState;
-	private Rectangle newState;
-	private Rectangle original = new Rectangle();
+	private static Rectangle oldState;
+	private static Rectangle newState;
+	private static Rectangle original = new Rectangle();
 
 	public ModifyRectangleCmd(Rectangle oldState, Rectangle newState) {
 		this.oldState = oldState;

@@ -4,9 +4,9 @@ import geometry.Point;
 
 public class ModifyPointCmd implements Command{
 
-	private Point oldState;
-	private Point newState;
-	private Point original = new Point();
+	private static Point oldState;
+	private static Point newState;
+	private static Point original = new Point();
 
 	public ModifyPointCmd(Point oldState, Point newState) {
 		this.oldState = oldState;

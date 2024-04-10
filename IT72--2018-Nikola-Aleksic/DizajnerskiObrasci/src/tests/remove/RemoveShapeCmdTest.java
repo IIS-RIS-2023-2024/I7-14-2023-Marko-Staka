@@ -1,4 +1,4 @@
-package tests;
+package tests.remove;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;

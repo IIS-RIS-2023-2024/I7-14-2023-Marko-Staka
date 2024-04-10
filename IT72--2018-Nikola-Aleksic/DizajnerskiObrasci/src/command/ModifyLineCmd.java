@@ -4,9 +4,9 @@ import geometry.Line;
 
 public class ModifyLineCmd implements Command{
 
-	private Line oldState;
-	private Line newState;
-	private Line original = new Line();
+	private static Line oldState;
+	private static Line newState;
+	private static Line original = new Line();
 
 	public ModifyLineCmd(Line oldState, Line newState) {
 		this.oldState = oldState;
