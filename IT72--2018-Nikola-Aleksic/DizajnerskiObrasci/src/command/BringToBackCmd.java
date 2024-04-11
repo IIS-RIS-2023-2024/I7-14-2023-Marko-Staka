@@ -7,9 +7,9 @@ import mvc.DrawingModel;
 
 public class BringToBackCmd implements Command {
 
-	private DrawingModel model;
-	private Shape shape;
-	private int position;
+	private static DrawingModel model;
+	private static Shape shape;
+	private static int position;
 
 	public BringToBackCmd(DrawingModel model, Shape shape, int position) {
 		this.model = model;
@@ -27,10 +27,8 @@ public class BringToBackCmd implements Command {
 
 	@Override
 	public void unexecute() {
-		for (int i = 0; i < position; i++) {
-			Collections.swap(model.getShapes(), i, i + 1);
-		}
-
+		model.remove(shape);
+		model.getShapes().add(position, shape);
 	}
 
 	@Override

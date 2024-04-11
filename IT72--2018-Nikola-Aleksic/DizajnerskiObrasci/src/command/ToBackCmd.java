@@ -21,6 +21,7 @@ public class ToBackCmd implements Command{
 	public void execute() {
 		if (position > 0) {
 			Collections.swap(model.getShapes(), position, position - 1);
+			position--;
 		}
 	}
 
@@ -28,6 +29,7 @@ public class ToBackCmd implements Command{
 	public void unexecute() {
 		if (position < model.getShapes().size() - 1) {
 			Collections.swap(model.getShapes(), position, position + 1);
+			position++;
 		}
 	}
 	

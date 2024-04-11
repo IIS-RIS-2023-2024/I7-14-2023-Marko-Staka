@@ -27,10 +27,8 @@ public class BringToFrontCmd implements Command {
 
 	@Override
 	public void unexecute() {
-		for (int i = (model.getShapes().size() - 1); i > position; i--) {
-			Collections.swap(model.getShapes(), i, i - 1);
-		}
-
+		model.remove(shape);
+		model.getShapes().add(position, shape);
 	}
 
 	@Override
