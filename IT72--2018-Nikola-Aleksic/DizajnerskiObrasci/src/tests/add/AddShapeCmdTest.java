@@ -9,10 +9,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import adapter.HexagonAdapter;
-
-
-
 import command.AddShapeCmd;
 import geometry.Circle;
 import geometry.Donut;
@@ -21,6 +17,7 @@ import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
 import mvc.DrawingModel;
+import adapter.HexagonAdapter;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
