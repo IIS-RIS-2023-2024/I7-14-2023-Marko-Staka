@@ -136,12 +136,12 @@ public class DrawingController {
 	}
 	
 	private Shape makeRectangle(MouseEvent e) {
-		DlgRectangle dlg = new DlgRectangle();
-		dlg.setModal(true);
-		dlg.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dlg.setVisible(true);
+		DlgRectangle dialog = new DlgRectangle();
+		dialog.setModal(true);
+		dialog.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dialog.setVisible(true);
 		try {
-			return dlg.getRectangle();
+			return dialog.getRectangle();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -149,12 +149,12 @@ public class DrawingController {
 	}
 	
 	private Shape makeCircle(MouseEvent e) {
-		DlgCircle dlg = new DlgCircle();
-		dlg.setModal(true);
-		dlg.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dlg.setVisible(true);
+		DlgCircle dialog = new DlgCircle();
+		dialog.setModal(true);
+		dialog.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dialog.setVisible(true);
 		try {
-			return dlg.getCircle();
+			return dialog.getCircle();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -162,12 +162,12 @@ public class DrawingController {
 	}
 	
 	private Shape makeDonut(MouseEvent e) {
-		DlgDonut dlg = new DlgDonut();
-		dlg.setModal(true);
-		dlg.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dlg.setVisible(true);
+		DlgDonut dialog = new DlgDonut();
+		dialog.setModal(true);
+		dialog.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dialog.setVisible(true);
 		try {
-			return dlg.getDonut();
+			return dialog.getDonut();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -175,12 +175,12 @@ public class DrawingController {
 	}
 	
 	private Shape makeHexagon(MouseEvent e) {
-		DlgHexagon dlg = new DlgHexagon();
-		dlg.setModal(true);
-		dlg.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dlg.setVisible(true);
+		DlgHexagon dialog = new DlgHexagon();
+		dialog.setModal(true);
+		dialog.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dialog.setVisible(true);
 		try {
-			return dlg.getHexagon();
+			return dialog.getHexagon();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -191,12 +191,12 @@ public class DrawingController {
 		if (selectedShapeList.get(0) != null) {
 			if (selectedShapeList.get(0) instanceof Point) {
 				Point oldPoint = (Point) selectedShapeList.get(0);
-				DlgPoint dlg = new DlgPoint();
-				dlg.setModal(true);
-				dlg.setPoint(oldPoint);
-				dlg.setVisible(true);
-				if (dlg.isOk) {
-					Point newPoint = dlg.getPoint();
+				DlgPoint dialog = new DlgPoint();
+				dialog.setModal(true);
+				dialog.setPoint(oldPoint);
+				dialog.setVisible(true);
+				if (dialog.isOk) {
+					Point newPoint = dialog.getPoint();
 					command = new ModifyPointCmd(oldPoint, newPoint);
 					command.execute();
 					undoStack.push(command);
@@ -204,12 +204,12 @@ public class DrawingController {
 				}
 			} else if (selectedShapeList.get(0) instanceof Line) {
 				Line oldLine = (Line) selectedShapeList.get(0);
-				DlgLine dlg = new DlgLine();
-				dlg.setModal(true);
-				dlg.setLine(oldLine);
-				dlg.setVisible(true);
-				if (dlg.isOk) {
-					Line newLine = dlg.getLine();
+				DlgLine dialog = new DlgLine();
+				dialog.setModal(true);
+				dialog.setLine(oldLine);
+				dialog.setVisible(true);
+				if (dialog.isOk) {
+					Line newLine = dialog.getLine();
 					command = new ModifyLineCmd(oldLine, newLine);
 					command.execute();
 					frame.getTextArea().append(command.toString());
@@ -218,12 +218,12 @@ public class DrawingController {
 				}
 			} else if (selectedShapeList.get(0) instanceof Donut) {
 				Donut oldDonut = (Donut) selectedShapeList.get(0);
-				DlgDonut dlg = new DlgDonut();
-				dlg.setModal(true);
-				dlg.setDonut(oldDonut);
-				dlg.setVisible(true);
-				if (dlg.isOk) {
-					Donut newDonut = dlg.getDonut();
+				DlgDonut dialog = new DlgDonut();
+				dialog.setModal(true);
+				dialog.setDonut(oldDonut);
+				dialog.setVisible(true);
+				if (dialog.isOk) {
+					Donut newDonut = dialog.getDonut();
 					command = new ModifyDonutCmd(oldDonut, newDonut);
 					command.execute();
 					frame.getTextArea().append(command.toString());
@@ -232,12 +232,12 @@ public class DrawingController {
 				}
 			} else if (selectedShapeList.get(0) instanceof Circle) {
 				Circle oldCircle = (Circle) selectedShapeList.get(0);
-				DlgCircle dlg = new DlgCircle();
-				dlg.setModal(true);
-				dlg.setCircle(oldCircle);
-				dlg.setVisible(true);
-				if (dlg.isOk) {
-					Circle newCircle = dlg.getCircle();
+				DlgCircle dialog = new DlgCircle();
+				dialog.setModal(true);
+				dialog.setCircle(oldCircle);
+				dialog.setVisible(true);
+				if (dialog.isOk) {
+					Circle newCircle = dialog.getCircle();
 					command = new ModifyCircleCmd(oldCircle, newCircle);
 					command.execute();
 					frame.getTextArea().append(command.toString());
@@ -246,12 +246,12 @@ public class DrawingController {
 				}
 			} else if (selectedShapeList.get(0) instanceof Rectangle) {
 				Rectangle oldRectangle = (Rectangle) selectedShapeList.get(0);
-				DlgRectangle dlg = new DlgRectangle();
-				dlg.setModal(true);
-				dlg.setRectangle(oldRectangle);
-				dlg.setVisible(true);
-				if (dlg.isOk) {
-					Rectangle newRectangle = dlg.getRectangle();
+				DlgRectangle dialog = new DlgRectangle();
+				dialog.setModal(true);
+				dialog.setRectangle(oldRectangle);
+				dialog.setVisible(true);
+				if (dialog.isOk) {
+					Rectangle newRectangle = dialog.getRectangle();
 					command = new ModifyRectangleCmd(oldRectangle, newRectangle);
 					command.execute();
 					frame.getTextArea().append(command.toString());
@@ -260,12 +260,12 @@ public class DrawingController {
 				}
 			} else if (selectedShapeList.get(0) instanceof HexagonAdapter) {
 				HexagonAdapter oldHexagon = (HexagonAdapter) selectedShapeList.get(0);
-				DlgHexagon dlg = new DlgHexagon();
-				dlg.setModal(true);
-				dlg.setHexagon(oldHexagon);
-				dlg.setVisible(true);
-				if (dlg.isOk) {
-					HexagonAdapter newHexagon = dlg.getHexagon();
+				DlgHexagon dialog = new DlgHexagon();
+				dialog.setModal(true);
+				dialog.setHexagon(oldHexagon);
+				dialog.setVisible(true);
+				if (dialog.isOk) {
+					HexagonAdapter newHexagon = dialog.getHexagon();
 					command = new ModifyHexagonCmd(oldHexagon, newHexagon);
 					command.execute();
 					frame.getTextArea().append(command.toString());
