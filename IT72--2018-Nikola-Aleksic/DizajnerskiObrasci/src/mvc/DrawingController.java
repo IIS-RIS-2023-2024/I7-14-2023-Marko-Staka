@@ -59,14 +59,14 @@ public class DrawingController {
 	private DrawingFrame frame;
 	
 	private Point startPoint;
-	private ArrayList<Shape> selectedList = new ArrayList<Shape>();
-	private Shape selected;
+	private Shape selectedShape;
+	
+	private ArrayList<Shape> selectedShapeList = new ArrayList<Shape>();
+	private ArrayList<String> logList;
 
 	private Stack<Command> undoStack = new Stack<Command>();
 	private Stack<Command> redoStack = new Stack<Command>();
 	
-	private ArrayList<String> log;
-
 	private Command command;
 	
 	private Observer observer = new Observer();
@@ -88,30 +88,30 @@ public class DrawingController {
 
 		if (frame.gettglSelection().isSelected()) {
 			Shape temp = null;
-			selected = null;
+			selectedShape = null;
 
 			Iterator<Shape> iterator = model.getShapes().iterator();
 			
 			while (iterator.hasNext()) {
 				temp = iterator.next();
 				if (temp.contains(e.getX(), e.getY())) {
-					selected = temp;
+					selectedShape = temp;
 				}
 			}
 
-			if (selected != null) {
-				if (selected.isSelected()) {
-					command = new UnselectShapeCmd(this, selected);
+			if (selectedShape != null) {
+				if (selectedShape.isSelected()) {
+					command = new UnselectShapeCmd(this, selectedShape);
 					command.execute();
 					frame.getTextArea().append(command.toString());
 					undoStack.push(command);
-					selected=null;
+					selectedShape=null;
 				} else {
-					command = new SelectShapeCmd(this, selected);
+					command = new SelectShapeCmd(this, selectedShape);
 					command.execute();
 					frame.getTextArea().append(command.toString());
 					undoStack.push(command);
-					selected=null;
+					selectedShape=null;
 				}
 			} else {
 				UnselectShapes();
@@ -122,7 +122,7 @@ public class DrawingController {
 			frame.repaint();
 			
 		} else {
-			if (selectedList.size() > 0) {
+			if (selectedShapeList.size() > 0) {
 				UnselectShapes();
 			} else if (frame.gettglPoint().isSelected()) {
 				newShape = new Point(e.getX(), e.getY(), frame.getBtnColor().getBackground());
@@ -222,9 +222,9 @@ public class DrawingController {
 	}
 	
 	protected void modify() {
-		if (selectedList.get(0) != null) {
-			if (selectedList.get(0) instanceof Point) {
-				Point oldPoint = (Point) selectedList.get(0);
+		if (selectedShapeList.get(0) != null) {
+			if (selectedShapeList.get(0) instanceof Point) {
+				Point oldPoint = (Point) selectedShapeList.get(0);
 				DlgPoint dlg = new DlgPoint();
 				dlg.setModal(true);
 				dlg.setPoint(oldPoint);
@@ -236,8 +236,8 @@ public class DrawingController {
 					undoStack.push(command);
 					redoStack.clear();
 				}
-			} else if (selectedList.get(0) instanceof Line) {
-				Line oldLine = (Line) selectedList.get(0);
+			} else if (selectedShapeList.get(0) instanceof Line) {
+				Line oldLine = (Line) selectedShapeList.get(0);
 				DlgLine dlg = new DlgLine();
 				dlg.setModal(true);
 				dlg.setLine(oldLine);
@@ -250,8 +250,8 @@ public class DrawingController {
 					undoStack.push(command);
 					redoStack.clear();
 				}
-			} else if (selectedList.get(0) instanceof Donut) {
-				Donut oldDonut = (Donut) selectedList.get(0);
+			} else if (selectedShapeList.get(0) instanceof Donut) {
+				Donut oldDonut = (Donut) selectedShapeList.get(0);
 				DlgDonut dlg = new DlgDonut();
 				dlg.setModal(true);
 				dlg.setDonut(oldDonut);
@@ -264,8 +264,8 @@ public class DrawingController {
 					undoStack.push(command);
 					redoStack.clear();
 				}
-			} else if (selectedList.get(0) instanceof Circle) {
-				Circle oldCircle = (Circle) selectedList.get(0);
+			} else if (selectedShapeList.get(0) instanceof Circle) {
+				Circle oldCircle = (Circle) selectedShapeList.get(0);
 				DlgCircle dlg = new DlgCircle();
 				dlg.setModal(true);
 				dlg.setCircle(oldCircle);
@@ -278,8 +278,8 @@ public class DrawingController {
 					undoStack.push(command);
 					redoStack.clear();
 				}
-			} else if (selectedList.get(0) instanceof Rectangle) {
-				Rectangle oldRectangle = (Rectangle) selectedList.get(0);
+			} else if (selectedShapeList.get(0) instanceof Rectangle) {
+				Rectangle oldRectangle = (Rectangle) selectedShapeList.get(0);
 				DlgRectangle dlg = new DlgRectangle();
 				dlg.setModal(true);
 				dlg.setRectangle(oldRectangle);
@@ -292,8 +292,8 @@ public class DrawingController {
 					undoStack.push(command);
 					redoStack.clear();
 				}
-			} else if (selectedList.get(0) instanceof HexagonAdapter) {
-				HexagonAdapter oldHexagon = (HexagonAdapter) selectedList.get(0);
+			} else if (selectedShapeList.get(0) instanceof HexagonAdapter) {
+				HexagonAdapter oldHexagon = (HexagonAdapter) selectedShapeList.get(0);
 				DlgHexagon dlg = new DlgHexagon();
 				dlg.setModal(true);
 				dlg.setHexagon(oldHexagon);
@@ -313,20 +313,20 @@ public class DrawingController {
 	}
 
 	protected void delete() {
-		if (selectedList.get(0) != null) {
+		if (selectedShapeList.get(0) != null) {
 			int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this object?", "",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (response == JOptionPane.YES_OPTION) {
 				Shape temp;
 				int position;
-				while(selectedList.size() > 0) {
-					temp = selectedList.get(0);
-					position = model.getShapes().indexOf(selectedList.get(0));
+				while(selectedShapeList.size() > 0) {
+					temp = selectedShapeList.get(0);
+					position = model.getShapes().indexOf(selectedShapeList.get(0));
 					command = new RemoveShapeCmd(model, temp, position);
 					command.execute();
 					frame.getTextArea().append(command.toString());
 					undoStack.push(command);
-					selectedList.remove(temp);
+					selectedShapeList.remove(temp);
 				}
 				redoStack.clear();
 				disableButtons();
@@ -358,12 +358,12 @@ public class DrawingController {
 	private void textToList(JTextArea txaArea) {
 		String str = txaArea.getText().toString();
 		String[] strSplit = str.split(System.lineSeparator());
-		log = new ArrayList<String>(Arrays.asList(strSplit));
+		logList = new ArrayList<String>(Arrays.asList(strSplit));
 	}
 	
 	public void saveLog() {
 		textToList(frame.getTextArea());
-		SaveManager manager = new SaveManager(new SaveLog(log));
+		SaveManager manager = new SaveManager(new SaveLog(logList));
 		manager.save();
 	}
 	
@@ -714,7 +714,7 @@ public class DrawingController {
 								command.execute();
 								frame.getTextArea().append(command.toString());
 								undoStack.push(command);
-								selectedList.remove(temp);
+								selectedShapeList.remove(temp);
 								disableButtons();
 								frame.repaint();
 								break;
@@ -738,7 +738,7 @@ public class DrawingController {
 								command.execute();
 								frame.getTextArea().append(command.toString());
 								undoStack.push(command);
-								selectedList.remove(temp);
+								selectedShapeList.remove(temp);
 								disableButtons();
 								frame.repaint();
 								break;
@@ -764,7 +764,7 @@ public class DrawingController {
 								command.execute();
 								frame.getTextArea().append(command.toString());
 								undoStack.push(command);
-								selectedList.remove(temp);
+								selectedShapeList.remove(temp);
 								disableButtons();
 								frame.repaint();
 								break;
@@ -789,7 +789,7 @@ public class DrawingController {
 								command.execute();
 								frame.getTextArea().append(command.toString());
 								undoStack.push(command);
-								selectedList.remove(temp);
+								selectedShapeList.remove(temp);
 								disableButtons();
 								frame.repaint();
 								break;
@@ -815,7 +815,7 @@ public class DrawingController {
 								command.execute();
 								frame.getTextArea().append(command.toString());
 								undoStack.push(command);
-								selectedList.remove(temp);
+								selectedShapeList.remove(temp);
 								disableButtons();
 								frame.repaint();
 								break;
@@ -840,7 +840,7 @@ public class DrawingController {
 								command.execute();
 								frame.getTextArea().append(command.toString());
 								undoStack.push(command);
-								selectedList.remove(temp);
+								selectedShapeList.remove(temp);
 								disableButtons();
 								frame.repaint();
 								break;
@@ -1141,7 +1141,7 @@ public class DrawingController {
 	}
 	
 	public void toBack() {
-		Shape shape = selectedList.get(0);
+		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new ToBackCmd(model, shape, position);
@@ -1155,7 +1155,7 @@ public class DrawingController {
 	}
 	
 	public void toFront() {
-		Shape shape = selectedList.get(0);
+		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new ToFrontCmd(model, shape, position);
@@ -1169,7 +1169,7 @@ public class DrawingController {
 		}
 	
 	public void bringToBack() {
-		Shape shape = selectedList.get(0);
+		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new BringToBackCmd(model, shape, position);
@@ -1183,7 +1183,7 @@ public class DrawingController {
 	}
 	
 	public void bringToFront() {
-		Shape shape = selectedList.get(0);
+		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new BringToFrontCmd(model, shape, position);
@@ -1197,26 +1197,21 @@ public class DrawingController {
 	}
 	
 	public void disableButtons() {
-		if (undoStack.isEmpty()) {
+		if (undoStack.isEmpty()) 
 			frame.getBtnUndo().setEnabled(false);
-		} else {
+		else 
 			frame.getBtnUndo().setEnabled(true);
-		}
 
-		if (redoStack.isEmpty()) {
+		if (redoStack.isEmpty())
 			frame.getBtnRedo().setEnabled(false);
-		} else {
+		else 
 			frame.getBtnRedo().setEnabled(true);
-		}
 		
-		if (!selectedList.isEmpty()) {
-			if (selectedList.size() == 1)
-			{
+		if (!selectedShapeList.isEmpty()) {
+			if (selectedShapeList.size() == 1)
 				observer.setBtnModify(true);
-
-			} else {
+			else 
 				observer.setBtnModify(false);
-			}
 			observer.setBtnDelete(true);
 		} else {
 			observer.setBtnModify(false);
@@ -1226,17 +1221,17 @@ public class DrawingController {
 	
 	public void UnselectShapes() {
 		Shape temp;
-		while(selectedList.size() > 0) {
-			temp = selectedList.get(0);
+		while(selectedShapeList.size() > 0) {
+			temp = selectedShapeList.get(0);
 			command = new UnselectShapeCmd(this, temp);
 			command.execute();
 			frame.getTextArea().append(command.toString());
 			undoStack.push(command);
-			selectedList.remove(temp);
+			selectedShapeList.remove(temp);
 		}
 	}
 	
-	public ArrayList<Shape> getSelectedList() {
-		return selectedList;
+	public ArrayList<Shape> getSelectedShapeList() {
+		return selectedShapeList;
 	}
 }
