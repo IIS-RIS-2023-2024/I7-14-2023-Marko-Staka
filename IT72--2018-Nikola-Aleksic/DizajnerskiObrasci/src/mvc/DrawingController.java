@@ -83,78 +83,18 @@ public class DrawingController {
 	}
 	
 	protected void mouseClicked(MouseEvent e) {
-		if (frame.gettglSelection().isSelected()) {
-			Shape temp = null;
-			selectedShape = null;
-
-			Iterator<Shape> iterator = model.getShapes().iterator();
-			
-			while (iterator.hasNext()) {
-				temp = iterator.next();
-				if (temp.contains(e.getX(), e.getY())) {
-					selectedShape = temp;
-				}
-			}
-
-			if (selectedShape != null) {
-				if (selectedShape.isSelected()) {
-					command = new UnselectShapeCmd(this, selectedShape);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					selectedShape=null;
-				} else {
-					command = new SelectShapeCmd(this, selectedShape);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					selectedShape=null;
-				}
-			} else {
-				UnselectShapes();
-			}
-			
-			redoStack.clear();
-			disableButtons();
-			frame.repaint();
-			
-		} else {
-			if (selectedShapeList.size() > 0) {
-				UnselectShapes();
-			} else if (frame.gettglPoint().isSelected()) {
-				drawPoint(e);
-			} else if (frame.gettglLine().isSelected()) {
-				drawLine(e);
-			} else if (frame.gettglRectangle().isSelected()) {
-				drawRectangle(e);
-			} else if (frame.gettglCircle().isSelected()) {
-				drawCircle(e);
-			} else if (frame.gettglDonut().isSelected()) {
-				drawDonut(e);
-			} else if (frame.gettglHexagon().isSelected()) {
-				drawHexagon(e);
-			}
-		}
+		if (frame.gettglSelection().isSelected())
+			buttonSelectionClick(e);
+		else 
+			drawShape(e);
+		
 		disableButtons();
 		frame.repaint();
 	}
 	
-	
-	private void drawPoint(MouseEvent e) {
-		Shape newShape = new Point(e.getX(), e.getY(), frame.getBtnColor().getBackground());
-		command = new AddShapeCmd(model, newShape);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		undoStack.push(command);
-		redoStack.clear();
-	}
-
-	private void drawLine(MouseEvent e) {
-		if (startPoint == null) {
-			startPoint = new Point(e.getX(), e.getY());
-		} else {
-			Shape newShape = new Line(startPoint, new Point(e.getX(), e.getY()), frame.getBtnColor().getBackground());
-			startPoint = null;
+	private void drawShape(MouseEvent e) {
+		Shape newShape = makeShape(e);
+		if(newShape != null) {
 			command = new AddShapeCmd(model, newShape);
 			command.execute();
 			frame.getTextArea().append(command.toString());
@@ -163,84 +103,88 @@ public class DrawingController {
 		}
 	}
 	
-	private void drawRectangle(MouseEvent e) {
+	private Shape makeShape(MouseEvent e) {
+		if (frame.gettglPoint().isSelected()) {
+			return makePoint(e);
+		} else if (frame.gettglLine().isSelected()) {
+			return makeLine(e);
+		} else if (frame.gettglRectangle().isSelected()) {
+			return makeRectangle(e);
+		} else if (frame.gettglCircle().isSelected()) {
+			return makeCircle(e);
+		} else if (frame.gettglDonut().isSelected()) {
+			return makeDonut(e);
+		} else if (frame.gettglHexagon().isSelected()) {
+			return makeHexagon(e);
+		}
+		return null;
+	}	
+
+	private Shape makePoint(MouseEvent e) {
+		return new Point(e.getX(), e.getY(), frame.getBtnColor().getBackground());
+	}
+	
+	private Shape makeLine(MouseEvent e) {
+		if (startPoint == null) {
+            startPoint = new Point(e.getX(), e.getY());
+            return null;
+        } else {
+            Shape newLine = new Line(startPoint, new Point(e.getX(), e.getY()), frame.getBtnColor().getBackground());
+            startPoint = null; 
+            return newLine;
+        }
+	}
+	
+	private Shape makeRectangle(MouseEvent e) {
 		DlgRectangle dlg = new DlgRectangle();
 		dlg.setModal(true);
 		dlg.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
 		dlg.setVisible(true);
-		if (!dlg.isCommited()) {
-			return;
-		}
 		try {
-			Shape newShape = dlg.getRectangle();
-			command = new AddShapeCmd(model, newShape);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
-			redoStack.clear();
+			return dlg.getRectangle();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		return null;
 	}
-
-	private void drawCircle(MouseEvent e) {
+	
+	private Shape makeCircle(MouseEvent e) {
 		DlgCircle dlg = new DlgCircle();
 		dlg.setModal(true);
 		dlg.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
 		dlg.setVisible(true);
-		if (!dlg.isCommited()) {
-			return;
-		}
 		try {
-			Shape newShape = dlg.getCircle();
-			command = new AddShapeCmd(model, newShape);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
-			redoStack.clear();
+			return dlg.getCircle();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		return null;
 	}
 	
-	private void drawDonut(MouseEvent e) {
+	private Shape makeDonut(MouseEvent e) {
 		DlgDonut dlg = new DlgDonut();
 		dlg.setModal(true);
 		dlg.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
 		dlg.setVisible(true);
-		if (!dlg.isCommited()) {
-			return;
-		}
 		try {
-			Shape newShape = dlg.getDonut();
-			command = new AddShapeCmd(model, newShape);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
-			redoStack.clear();
+			return dlg.getDonut();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		return null;
 	}
 	
-	private void drawHexagon(MouseEvent e) {
+	private Shape makeHexagon(MouseEvent e) {
 		DlgHexagon dlg = new DlgHexagon();
 		dlg.setModal(true);
 		dlg.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
 		dlg.setVisible(true);
-		if (!dlg.isCommited()) {
-			return;
-		}
 		try {
-			Shape newShape = dlg.getHexagon();
-			command = new AddShapeCmd(model, newShape);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
-			redoStack.clear();
+			return dlg.getHexagon();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		return null;
 	}
 	
 	protected void modify() {
@@ -1239,6 +1183,30 @@ public class DrawingController {
 			observer.setBtnModify(false);
 			observer.setBtnDelete(false);
 		}
+	}
+	
+	public void buttonSelectionClick(MouseEvent e) {
+		Shape temp = null;
+		selectedShape = null;
+
+		Iterator<Shape> iterator = model.getShapes().iterator();
+		while (iterator.hasNext()) {
+			temp = iterator.next();
+			if (temp.contains(e.getX(), e.getY())) {
+				selectedShape = temp;
+			}
+		}
+
+		if (selectedShape != null) {	
+			Command command = selectedShape.isSelected() ? new UnselectShapeCmd(this, selectedShape) : new SelectShapeCmd(this, selectedShape);
+			command.execute();
+			frame.getTextArea().append(command.toString());
+			undoStack.push(command);
+			selectedShape = null;
+		} else {
+			UnselectShapes();
+		}
+		redoStack.clear();	
 	}
 	
 	public void UnselectShapes() {
