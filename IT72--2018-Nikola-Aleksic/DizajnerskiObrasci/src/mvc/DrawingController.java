@@ -83,9 +83,6 @@ public class DrawingController {
 	}
 	
 	protected void mouseClicked(MouseEvent e) {
-
-		Shape newShape = null;
-
 		if (frame.gettglSelection().isSelected()) {
 			Shape temp = null;
 			selectedShape = null;
@@ -125,100 +122,125 @@ public class DrawingController {
 			if (selectedShapeList.size() > 0) {
 				UnselectShapes();
 			} else if (frame.gettglPoint().isSelected()) {
-				newShape = new Point(e.getX(), e.getY(), frame.getBtnColor().getBackground());
-				command = new AddShapeCmd(model, newShape);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				undoStack.push(command);
-				redoStack.clear();
+				drawPoint(e);
 			} else if (frame.gettglLine().isSelected()) {
-				if (startPoint == null) {
-					startPoint = new Point(e.getX(), e.getY());
-				} else {
-					newShape = new Line(startPoint, new Point(e.getX(), e.getY()), frame.getBtnColor().getBackground());
-					startPoint = null;
-					command = new AddShapeCmd(model, newShape);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				}
+				drawLine(e);
 			} else if (frame.gettglRectangle().isSelected()) {
-				DlgRectangle dlg = new DlgRectangle();
-				dlg.setModal(true);
-				dlg.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-				dlg.setVisible(true);
-				if (!dlg.isCommited()) {
-					return;
-				}
-				try {
-					newShape = dlg.getRectangle();
-					command = new AddShapeCmd(model, newShape);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				drawRectangle(e);
 			} else if (frame.gettglCircle().isSelected()) {
-				DlgCircle dlg = new DlgCircle();
-				dlg.setModal(true);
-				dlg.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-				dlg.setVisible(true);
-				if (!dlg.isCommited()) {
-					return;
-				}
-				try {
-					newShape = dlg.getCircle();
-					command = new AddShapeCmd(model, newShape);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				drawCircle(e);
 			} else if (frame.gettglDonut().isSelected()) {
-				DlgDonut dlg = new DlgDonut();
-				dlg.setModal(true);
-				dlg.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-				dlg.setVisible(true);
-				if (!dlg.isCommited()) {
-					return;
-				}
-				try {
-					newShape = dlg.getDonut();
-					command = new AddShapeCmd(model, newShape);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				drawDonut(e);
 			} else if (frame.gettglHexagon().isSelected()) {
-				DlgHexagon dlg = new DlgHexagon();
-				dlg.setModal(true);
-				dlg.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-				dlg.setVisible(true);
-				if (!dlg.isCommited()) {
-					return;
-				}
-				try {
-					newShape = dlg.getHexagon();
-					command = new AddShapeCmd(model, newShape);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				drawHexagon(e);
 			}
 		}
 		disableButtons();
 		frame.repaint();
+	}
+	
+	
+	private void drawPoint(MouseEvent e) {
+		Shape newShape = new Point(e.getX(), e.getY(), frame.getBtnColor().getBackground());
+		command = new AddShapeCmd(model, newShape);
+		command.execute();
+		frame.getTextArea().append(command.toString());
+		undoStack.push(command);
+		redoStack.clear();
+	}
+
+	private void drawLine(MouseEvent e) {
+		if (startPoint == null) {
+			startPoint = new Point(e.getX(), e.getY());
+		} else {
+			Shape newShape = new Line(startPoint, new Point(e.getX(), e.getY()), frame.getBtnColor().getBackground());
+			startPoint = null;
+			command = new AddShapeCmd(model, newShape);
+			command.execute();
+			frame.getTextArea().append(command.toString());
+			undoStack.push(command);
+			redoStack.clear();
+		}
+	}
+	
+	private void drawRectangle(MouseEvent e) {
+		DlgRectangle dlg = new DlgRectangle();
+		dlg.setModal(true);
+		dlg.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dlg.setVisible(true);
+		if (!dlg.isCommited()) {
+			return;
+		}
+		try {
+			Shape newShape = dlg.getRectangle();
+			command = new AddShapeCmd(model, newShape);
+			command.execute();
+			frame.getTextArea().append(command.toString());
+			undoStack.push(command);
+			redoStack.clear();
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void drawCircle(MouseEvent e) {
+		DlgCircle dlg = new DlgCircle();
+		dlg.setModal(true);
+		dlg.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dlg.setVisible(true);
+		if (!dlg.isCommited()) {
+			return;
+		}
+		try {
+			Shape newShape = dlg.getCircle();
+			command = new AddShapeCmd(model, newShape);
+			command.execute();
+			frame.getTextArea().append(command.toString());
+			undoStack.push(command);
+			redoStack.clear();
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void drawDonut(MouseEvent e) {
+		DlgDonut dlg = new DlgDonut();
+		dlg.setModal(true);
+		dlg.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dlg.setVisible(true);
+		if (!dlg.isCommited()) {
+			return;
+		}
+		try {
+			Shape newShape = dlg.getDonut();
+			command = new AddShapeCmd(model, newShape);
+			command.execute();
+			frame.getTextArea().append(command.toString());
+			undoStack.push(command);
+			redoStack.clear();
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void drawHexagon(MouseEvent e) {
+		DlgHexagon dlg = new DlgHexagon();
+		dlg.setModal(true);
+		dlg.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dlg.setVisible(true);
+		if (!dlg.isCommited()) {
+			return;
+		}
+		try {
+			Shape newShape = dlg.getHexagon();
+			command = new AddShapeCmd(model, newShape);
+			command.execute();
+			frame.getTextArea().append(command.toString());
+			undoStack.push(command);
+			redoStack.clear();
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	protected void modify() {
