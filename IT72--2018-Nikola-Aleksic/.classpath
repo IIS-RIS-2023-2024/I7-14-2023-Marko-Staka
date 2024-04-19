@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="DizajnerskiObrasci/src"/>
 	<classpathentry kind="lib" path="DizajnerskiObrasci/src/jar/heksagon.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="C:/Users/Desktop/Konferencija Bor/Radovi/mockito-core-5.11.0.jar"/>
 	<classpathentry kind="output" path="DizajnerskiObrasci/bin"/>
 </classpath>

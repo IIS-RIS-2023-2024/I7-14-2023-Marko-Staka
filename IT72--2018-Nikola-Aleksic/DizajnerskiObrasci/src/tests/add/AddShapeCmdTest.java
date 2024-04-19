@@ -16,6 +16,7 @@ import geometry.Line;
 import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
+import mvc.DrawingController;
 import mvc.DrawingModel;
 import adapter.HexagonAdapter;
 
@@ -66,7 +67,7 @@ public class AddShapeCmdTest {
 	@Order(2)
 	public final void testAddPointUnexecute() {
 		addPointCmd.unexecute();
-		
+
 		assertTrue(drawingModel.getShapes().size() == 0);
 	}
 	
@@ -160,4 +161,5 @@ public class AddShapeCmdTest {
 
 		assertTrue(drawingModel.getShapes().size() == 0);
 	}
+	
 }

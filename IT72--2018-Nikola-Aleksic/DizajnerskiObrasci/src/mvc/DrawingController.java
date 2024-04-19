@@ -188,106 +188,96 @@ public class DrawingController {
 	}
 	
 	protected void modify() {
-		if (selectedShapeList.get(0) != null) {
-			if (selectedShapeList.get(0) instanceof Point) {
-				Point oldPoint = (Point) selectedShapeList.get(0);
-				DlgPoint dialog = new DlgPoint();
-				dialog.setModal(true);
-				dialog.setPoint(oldPoint);
-				dialog.setVisible(true);
-				if (dialog.isOk) {
-					Point newPoint = dialog.getPoint();
-					command = new ModifyPointCmd(oldPoint, newPoint);
-					command.execute();
-					undoStack.push(command);
-					redoStack.clear();
-				}
-			} else if (selectedShapeList.get(0) instanceof Line) {
-				Line oldLine = (Line) selectedShapeList.get(0);
-				DlgLine dialog = new DlgLine();
-				dialog.setModal(true);
-				dialog.setLine(oldLine);
-				dialog.setVisible(true);
-				if (dialog.isOk) {
-					Line newLine = dialog.getLine();
-					command = new ModifyLineCmd(oldLine, newLine);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				}
-			} else if (selectedShapeList.get(0) instanceof Donut) {
-				Donut oldDonut = (Donut) selectedShapeList.get(0);
-				DlgDonut dialog = new DlgDonut();
-				dialog.setModal(true);
-				dialog.setDonut(oldDonut);
-				dialog.setVisible(true);
-				if (dialog.isOk) {
-					Donut newDonut = dialog.getDonut();
-					command = new ModifyDonutCmd(oldDonut, newDonut);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				}
-			} else if (selectedShapeList.get(0) instanceof Circle) {
-				Circle oldCircle = (Circle) selectedShapeList.get(0);
-				DlgCircle dialog = new DlgCircle();
-				dialog.setModal(true);
-				dialog.setCircle(oldCircle);
-				dialog.setVisible(true);
-				if (dialog.isOk) {
-					Circle newCircle = dialog.getCircle();
-					command = new ModifyCircleCmd(oldCircle, newCircle);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				}
-			} else if (selectedShapeList.get(0) instanceof Rectangle) {
-				Rectangle oldRectangle = (Rectangle) selectedShapeList.get(0);
-				DlgRectangle dialog = new DlgRectangle();
-				dialog.setModal(true);
-				dialog.setRectangle(oldRectangle);
-				dialog.setVisible(true);
-				if (dialog.isOk) {
-					Rectangle newRectangle = dialog.getRectangle();
-					command = new ModifyRectangleCmd(oldRectangle, newRectangle);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				}
-			} else if (selectedShapeList.get(0) instanceof HexagonAdapter) {
-				HexagonAdapter oldHexagon = (HexagonAdapter) selectedShapeList.get(0);
-				DlgHexagon dialog = new DlgHexagon();
-				dialog.setModal(true);
-				dialog.setHexagon(oldHexagon);
-				dialog.setVisible(true);
-				if (dialog.isOk) {
-					HexagonAdapter newHexagon = dialog.getHexagon();
-					command = new ModifyHexagonCmd(oldHexagon, newHexagon);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					redoStack.clear();
-				}
-			}
-		}
+		if (selectedShapeList.get(0) instanceof Point) 
+			modifyPoint();
+		else if (selectedShapeList.get(0) instanceof Line) 
+			modifyLine();
+		else if (selectedShapeList.get(0) instanceof Donut) 
+			modifyDonut();
+		else if (selectedShapeList.get(0) instanceof Circle) 
+			modifyCircle();
+		else if (selectedShapeList.get(0) instanceof Rectangle) 
+			modifyRectangle();
+		else if (selectedShapeList.get(0) instanceof HexagonAdapter) 
+			modifyHexagon();	
+
+		command.execute();
+		frame.getTextArea().append(command.toString());
+		undoStack.push(command);
+		redoStack.clear();
 		disableButtons();
 		frame.repaint();
 	}
 
+	private void modifyPoint() {
+		Point oldPoint = (Point) selectedShapeList.get(0);
+		DlgPoint dialog = new DlgPoint();
+		dialog.setModal(true);
+		dialog.setPoint(oldPoint);
+		dialog.setVisible(true);
+		if (dialog.isOk) 
+			command = new ModifyPointCmd(oldPoint, dialog.getPoint());
+	}
+	
+	private void modifyLine() {
+		Line oldLine = (Line) selectedShapeList.get(0);
+		DlgLine dialog = new DlgLine();
+		dialog.setModal(true);
+		dialog.setLine(oldLine);
+		dialog.setVisible(true);
+		if (dialog.isOk) 
+			command = new ModifyLineCmd(oldLine, dialog.getLine());
+	}
+	
+	private void modifyRectangle() {
+		Rectangle oldRectangle = (Rectangle) selectedShapeList.get(0);
+		DlgRectangle dialog = new DlgRectangle();
+		dialog.setModal(true);
+		dialog.setRectangle(oldRectangle);
+		dialog.setVisible(true);
+		if (dialog.isOk)
+			command = new ModifyRectangleCmd(oldRectangle, dialog.getRectangle());
+	}
+	
+	private void modifyCircle() {
+		Circle oldCircle = (Circle) selectedShapeList.get(0);
+		DlgCircle dialog = new DlgCircle();
+		dialog.setModal(true);
+		dialog.setCircle(oldCircle);
+		dialog.setVisible(true);
+		if (dialog.isOk) 
+			command = new ModifyCircleCmd(oldCircle, dialog.getCircle());
+	}
+	
+	private void modifyDonut() {
+		Donut oldDonut = (Donut) selectedShapeList.get(0);
+		DlgDonut dialog = new DlgDonut();
+		dialog.setModal(true);
+		dialog.setDonut(oldDonut);
+		dialog.setVisible(true);
+		if (dialog.isOk)
+			command = new ModifyDonutCmd(oldDonut, dialog.getDonut());
+	}
+	
+	private void modifyHexagon() {
+		HexagonAdapter oldHexagon = (HexagonAdapter) selectedShapeList.get(0);
+		DlgHexagon dialog = new DlgHexagon();
+		dialog.setModal(true);
+		dialog.setHexagon(oldHexagon);
+		dialog.setVisible(true);
+		if (dialog.isOk)
+			command = new ModifyHexagonCmd(oldHexagon, dialog.getHexagon());
+	}
+	
 	protected void delete() {
 		if (selectedShapeList.get(0) != null) {
-			int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this object?", "",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this object?", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (response == JOptionPane.YES_OPTION) {
 				Shape temp;
 				int position;
 				while(selectedShapeList.size() > 0) {
 					temp = selectedShapeList.get(0);
-					position = model.getShapes().indexOf(selectedShapeList.get(0));
+					position = model.getShapes().indexOf(temp);
 					command = new RemoveShapeCmd(model, temp, position);
 					command.execute();
 					frame.getTextArea().append(command.toString());
