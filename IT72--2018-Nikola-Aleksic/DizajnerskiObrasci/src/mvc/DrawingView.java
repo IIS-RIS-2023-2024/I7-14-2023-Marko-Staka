@@ -5,12 +5,12 @@ import java.awt.Graphics;
 import java.util.Iterator;
 
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import geometry.Shape;
 
 public class DrawingView extends JPanel {
 	
+	private static final long serialVersionUID = 1L;
 	private DrawingModel model = new DrawingModel();
 
 	public void setModel(DrawingModel model) {

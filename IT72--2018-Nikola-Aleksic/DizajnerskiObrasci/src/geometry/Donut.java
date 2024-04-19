@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 public class Donut extends Circle {
 
+	private static final long serialVersionUID = 1L;
 	private int innerRadius;
 
 	public Donut() {

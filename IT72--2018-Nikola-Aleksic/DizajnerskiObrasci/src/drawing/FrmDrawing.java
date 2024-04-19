@@ -27,6 +27,7 @@ import geometry.Shape;
 
 public class FrmDrawing extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnModify;
 	private JButton btnDelete;

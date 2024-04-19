@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 public class Line extends Shape {
 
+	private static final long serialVersionUID = 1L;
 	private Point startPoint = new Point();
 	private Point endPoint = new Point();
 	

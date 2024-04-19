@@ -21,6 +21,8 @@ import geometry.Point;
 
 public class DlgHexagon extends JDialog {
 	
+	private static final long serialVersionUID = 1L;
+
 	final JPanel contentPanel = new JPanel();
 
 	public boolean isOk;

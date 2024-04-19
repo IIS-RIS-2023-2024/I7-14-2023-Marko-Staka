@@ -22,6 +22,7 @@ import geometry.Shape;
 
 public class PnlDrawing extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	private FrmDrawing frame;
 	private ArrayList<Shape> shapes = new ArrayList<Shape>();
 	private Point startPoint;

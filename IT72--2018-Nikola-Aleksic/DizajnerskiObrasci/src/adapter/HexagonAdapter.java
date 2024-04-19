@@ -10,6 +10,7 @@ import hexagon.Hexagon;
 
 public class HexagonAdapter extends SurfaceShape implements Moveable{
 	
+	private static final long serialVersionUID = 1L;
 	private Hexagon hexagon = new Hexagon(0, 0, 0);
 
 	public HexagonAdapter() {

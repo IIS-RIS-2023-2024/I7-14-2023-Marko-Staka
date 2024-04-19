@@ -27,6 +27,7 @@ import java.awt.event.MouseEvent;
 
 public class DrawingFrame extends JFrame {
 	
+	private static final long serialVersionUID = 1L;
 	private DrawingView view = new DrawingView();
 	private DrawingController controller;
 	

@@ -16,7 +16,6 @@ import geometry.Line;
 import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
-import mvc.DrawingController;
 import mvc.DrawingModel;
 import adapter.HexagonAdapter;
 

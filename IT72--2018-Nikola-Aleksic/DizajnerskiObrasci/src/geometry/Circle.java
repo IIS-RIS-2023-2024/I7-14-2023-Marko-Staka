@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 public class Circle extends SurfaceShape{
 
+	private static final long serialVersionUID = 1L;
 	private Point center = new Point();
 	private int radius;
 	

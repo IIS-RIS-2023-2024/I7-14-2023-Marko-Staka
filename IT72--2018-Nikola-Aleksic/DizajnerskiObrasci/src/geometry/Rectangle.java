@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 public class Rectangle extends SurfaceShape {
 
+	private static final long serialVersionUID = 1L;
 	private Point upperLeftPoint = new Point();
 	private int height;
 	private int width;

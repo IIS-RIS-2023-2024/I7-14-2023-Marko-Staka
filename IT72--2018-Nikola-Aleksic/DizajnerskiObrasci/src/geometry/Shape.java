@@ -8,6 +8,7 @@ import drawing.Moveable;
 
 public abstract class Shape implements Moveable, Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private boolean selected;
 	private Color color = Color.BLACK;
 	

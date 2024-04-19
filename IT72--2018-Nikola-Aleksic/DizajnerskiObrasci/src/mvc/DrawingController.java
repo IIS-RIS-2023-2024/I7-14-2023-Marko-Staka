@@ -781,7 +781,6 @@ public class DrawingController {
 						String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
 						String[] sValues = shapeValues.split(",");
 
-						int radius = Integer.parseInt(sValues[2]);
 						Color color = new Color(Integer.parseInt("-"+(sValues[4])));
 						Color innerColor = new Color(Integer.parseInt("-"+(sValues[3])));
 						int position = Integer.parseInt(sValues[5]);

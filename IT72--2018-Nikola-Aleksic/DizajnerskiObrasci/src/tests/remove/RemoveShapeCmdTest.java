@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import adapter.HexagonAdapter;
-import command.AddShapeCmd;
 import command.RemoveShapeCmd;
 import geometry.Circle;
 import geometry.Donut;
