@@ -268,4 +268,6 @@ public class DlgRectangle extends JDialog {
 	public boolean isCommited() {
 		return this.isOk;
 	}
+	
+	
 }

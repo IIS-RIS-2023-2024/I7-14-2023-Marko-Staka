@@ -8,5 +8,9 @@
 	<classpathentry kind="src" path="DizajnerskiObrasci/src"/>
 	<classpathentry kind="lib" path="DizajnerskiObrasci/src/jar/heksagon.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="byte-buddy-1.14.12.jar"/>
+	<classpathentry kind="lib" path="byte-buddy-agent-1.14.12.jar"/>
+	<classpathentry kind="lib" path="mockito-core-5.11.0.jar"/>
+	<classpathentry kind="lib" path="objenesis-3.3.jar"/>
 	<classpathentry kind="output" path="DizajnerskiObrasci/bin"/>
 </classpath>

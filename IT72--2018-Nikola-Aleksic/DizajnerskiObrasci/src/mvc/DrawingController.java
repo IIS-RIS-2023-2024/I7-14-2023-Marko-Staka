@@ -58,6 +58,11 @@ public class DrawingController {
 	private DrawingModel model;
 	private DrawingFrame frame;
 	
+	DlgRectangle dialogRectangle;
+	DlgCircle dialogCircle;
+	DlgDonut dialogDonut;
+	DlgHexagon dialogHexagon;
+
 	private Point startPoint;
 	private Shape selectedShape;
 	
@@ -82,7 +87,7 @@ public class DrawingController {
 		observer.addPropertyChangeListener(observerModify);
 	}
 	
-	protected void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 		if (frame.gettglSelection().isSelected())
 			buttonSelectionClick(e);
 		else 
@@ -92,7 +97,7 @@ public class DrawingController {
 		frame.repaint();
 	}
 	
-	private void drawShape(MouseEvent e) {
+	public void drawShape(MouseEvent e) {
 		Shape newShape = makeShape(e);
 		if(newShape != null) {
 			command = new AddShapeCmd(model, newShape);
@@ -103,7 +108,7 @@ public class DrawingController {
 		}
 	}
 	
-	private Shape makeShape(MouseEvent e) {
+	public Shape makeShape(MouseEvent e) {
 		if (frame.gettglPoint().isSelected()) {
 			return makePoint(e);
 		} else if (frame.gettglLine().isSelected()) {
@@ -135,13 +140,14 @@ public class DrawingController {
         }
 	}
 	
-	private Shape makeRectangle(MouseEvent e) {
-		DlgRectangle dialog = new DlgRectangle();
-		dialog.setModal(true);
-		dialog.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dialog.setVisible(true);
+	public Shape makeRectangle(MouseEvent e) {
+	    if (dialogRectangle == null) 
+	    	dialogRectangle = new DlgRectangle();
+	    dialogRectangle.setModal(true);
+	    dialogRectangle.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+	    dialogRectangle.setVisible(true);
 		try {
-			return dialog.getRectangle();
+			return dialogRectangle.getRectangle();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -149,12 +155,13 @@ public class DrawingController {
 	}
 	
 	private Shape makeCircle(MouseEvent e) {
-		DlgCircle dialog = new DlgCircle();
-		dialog.setModal(true);
-		dialog.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dialog.setVisible(true);
+	    if (dialogCircle == null)
+	    	dialogCircle = new DlgCircle();
+		dialogCircle.setModal(true);
+		dialogCircle.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dialogCircle.setVisible(true);
 		try {
-			return dialog.getCircle();
+			return dialogCircle.getCircle();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -162,25 +169,27 @@ public class DrawingController {
 	}
 	
 	private Shape makeDonut(MouseEvent e) {
-		DlgDonut dialog = new DlgDonut();
-		dialog.setModal(true);
-		dialog.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dialog.setVisible(true);
+	    if (dialogDonut == null)
+	    	dialogDonut = new DlgDonut();
+		dialogDonut.setModal(true);
+		dialogDonut.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dialogDonut.setVisible(true);
 		try {
-			return dialog.getDonut();
+			return dialogDonut.getDonut();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return null;
 	}
 	
-	private Shape makeHexagon(MouseEvent e) {
-		DlgHexagon dialog = new DlgHexagon();
-		dialog.setModal(true);
-		dialog.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dialog.setVisible(true);
+	public Shape makeHexagon(MouseEvent e) {
+	    if (dialogHexagon == null)
+	    	dialogHexagon = new DlgHexagon();
+		dialogHexagon.setModal(true);
+		dialogHexagon.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
+		dialogHexagon.setVisible(true);
 		try {
-			return dialog.getHexagon();
+			return dialogHexagon.getHexagon();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -1208,6 +1217,22 @@ public class DrawingController {
 			undoStack.push(command);
 			selectedShapeList.remove(temp);
 		}
+	}
+	
+	public void setDialogRectangle(DlgRectangle dialogRectangle) {
+		this.dialogRectangle = dialogRectangle;
+	}
+
+	public void setDialogCircle(DlgCircle dialogCircle) {
+		this.dialogCircle = dialogCircle;
+	}
+
+	public void setDialogDonut(DlgDonut dialogDonut) {
+		this.dialogDonut = dialogDonut;
+	}
+
+	public void setDialogHexagon(DlgHexagon dialogHexagon) {
+		this.dialogHexagon = dialogHexagon;
 	}
 	
 	public ArrayList<Shape> getSelectedShapeList() {
