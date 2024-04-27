@@ -246,4 +246,5 @@ public class DlgCircle extends JDialog {
 		return this.isOk;
 	}
 
+
 }

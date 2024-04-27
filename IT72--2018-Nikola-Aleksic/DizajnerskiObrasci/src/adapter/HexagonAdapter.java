@@ -35,6 +35,7 @@ public class HexagonAdapter extends SurfaceShape implements Moveable{
 		this(center, radius, selected, color);
 		this.hexagon.setAreaColor(innerColor);
 	}
+	
 
 	public HexagonAdapter(Point center, int radius, Color color, Color innerColor) {
 		this.hexagon = new Hexagon(center.getX(), center.getY(), radius);
@@ -124,11 +125,7 @@ public class HexagonAdapter extends SurfaceShape implements Moveable{
 	public void setHexagonInnerColor(Color innerColor) {
 		this.hexagon.setAreaColor(innerColor);
 	}
-	
-	@Override
-	public String toString() {
-		return "Hexagon: [center= " + getHexagonCenter().getX() + ", " + getHexagonCenter().getY() + ", radius= " + getHexagonRadius() + ", color= " + Integer.toString(getHexagonInnerColor().getRGB()) + ", border color= " + Integer.toString(getHexagonBorderColor().getRGB()) + "]";
-	}
+
 	
 	public HexagonAdapter clone(HexagonAdapter hexagon) {		
 		hexagon.setHexagonCenter(this.getHexagonCenter());
@@ -137,6 +134,12 @@ public class HexagonAdapter extends SurfaceShape implements Moveable{
 		hexagon.setHexagonInnerColor(this.getHexagonInnerColor());
 
 		return hexagon;
+	}
+
+	
+	@Override
+	public String toString() {
+	    return "Hexagon: [center= " + getHexagonCenter().getX() + ", " + getHexagonCenter().getY() + ", radius= " + getHexagonRadius() + ", color= " + getHexagonInnerColor().getRGB() + ", border color= " + getHexagonBorderColor().getRGB() + "]";
 	}
 
 }

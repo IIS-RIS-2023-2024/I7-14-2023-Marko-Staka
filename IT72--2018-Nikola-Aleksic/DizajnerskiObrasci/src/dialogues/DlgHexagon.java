@@ -222,7 +222,7 @@ public class DlgHexagon extends JDialog {
 				new Point(Integer.parseInt(this.getTxtX().getText().toString()),
 						Integer.parseInt(this.getTxtY().getText().toString())),
 				Integer.parseInt(this.getTxtRadius().getText().toString()),
-				false, this.ccLineColor.getColor(),
+				this.ccLineColor.getColor(),
 				this.ccInnerColor.getColor());
 		return hexagon;
 	}
@@ -240,5 +240,5 @@ public class DlgHexagon extends JDialog {
 	public boolean isCommited() {
 		return this.isOk;
 	}
-
+	
 }

@@ -180,4 +180,6 @@ public class DlgPoint extends JDialog {
 	public boolean isCommited() {
 		return this.isOk;
 	}
+
+	
 }

@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JFileChooser;
@@ -58,6 +59,8 @@ public class DrawingController {
 	private DrawingModel model;
 	private DrawingFrame frame;
 	
+	DlgPoint dialogPoint;
+	DlgLine dialogLine;
 	DlgRectangle dialogRectangle;
 	DlgCircle dialogCircle;
 	DlgDonut dialogDonut;
@@ -66,13 +69,13 @@ public class DrawingController {
 	private Point startPoint;
 	private Shape selectedShape;
 	
-	private ArrayList<Shape> selectedShapeList = new ArrayList<Shape>();
-	private ArrayList<String> logList;
+	public ArrayList<Shape> selectedShapeList = new ArrayList<Shape>();
+	public ArrayList<String> logList;
 
-	private Stack<Command> undoStack = new Stack<Command>();
-	private Stack<Command> redoStack = new Stack<Command>();
+	public Stack<Command> undoStack = new Stack<Command>();
+	public Stack<Command> redoStack = new Stack<Command>();
 	
-	private Command command;
+	public Command command;
 	
 	private Observer observer = new Observer();
 	private ObserverChange observerModify;
@@ -125,11 +128,11 @@ public class DrawingController {
 		return null;
 	}	
 
-	private Shape makePoint(MouseEvent e) {
+	public Shape makePoint(MouseEvent e) {
 		return new Point(e.getX(), e.getY(), frame.getBtnColor().getBackground());
 	}
 	
-	private Shape makeLine(MouseEvent e) {
+	public Shape makeLine(MouseEvent e) {
 		if (startPoint == null) {
             startPoint = new Point(e.getX(), e.getY());
             return null;
@@ -154,7 +157,7 @@ public class DrawingController {
 		return null;
 	}
 	
-	private Shape makeCircle(MouseEvent e) {
+	public Shape makeCircle(MouseEvent e) {
 	    if (dialogCircle == null)
 	    	dialogCircle = new DlgCircle();
 		dialogCircle.setModal(true);
@@ -168,7 +171,7 @@ public class DrawingController {
 		return null;
 	}
 	
-	private Shape makeDonut(MouseEvent e) {
+	public Shape makeDonut(MouseEvent e) {
 	    if (dialogDonut == null)
 	    	dialogDonut = new DlgDonut();
 		dialogDonut.setModal(true);
@@ -196,7 +199,7 @@ public class DrawingController {
 		return null;
 	}
 	
-	protected void modify() {
+	public void modify() {
 		if (selectedShapeList.get(0) instanceof Point) 
 			modifyPoint();
 		else if (selectedShapeList.get(0) instanceof Line) 
@@ -218,70 +221,75 @@ public class DrawingController {
 		frame.repaint();
 	}
 
-	private void modifyPoint() {
+	public void modifyPoint() {
 		Point oldPoint = (Point) selectedShapeList.get(0);
-		DlgPoint dialog = new DlgPoint();
-		dialog.setModal(true);
-		dialog.setPoint(oldPoint);
-		dialog.setVisible(true);
-		if (dialog.isOk) 
-			command = new ModifyPointCmd(oldPoint, dialog.getPoint());
+	    if (dialogPoint == null) 
+	    	dialogPoint = new DlgPoint();
+	    dialogPoint.setModal(true);
+	    dialogPoint.setPoint(oldPoint);
+	    dialogPoint.setVisible(true);
+		if (dialogPoint.isCommited()) 
+			command = new ModifyPointCmd(oldPoint, dialogPoint.getPoint());
 	}
 	
-	private void modifyLine() {
+	public void modifyLine() {
 		Line oldLine = (Line) selectedShapeList.get(0);
-		DlgLine dialog = new DlgLine();
-		dialog.setModal(true);
-		dialog.setLine(oldLine);
-		dialog.setVisible(true);
-		if (dialog.isOk) 
-			command = new ModifyLineCmd(oldLine, dialog.getLine());
+	    if (dialogLine == null) 
+	    	dialogLine = new DlgLine();
+	    dialogLine.setModal(true);
+	    dialogLine.setLine(oldLine);
+	    dialogLine.setVisible(true);
+		if (dialogLine.isCommited()) 
+			command = new ModifyLineCmd(oldLine, dialogLine.getLine());
 	}
 	
-	private void modifyRectangle() {
+	public void modifyRectangle() {
 		Rectangle oldRectangle = (Rectangle) selectedShapeList.get(0);
-		DlgRectangle dialog = new DlgRectangle();
-		dialog.setModal(true);
-		dialog.setRectangle(oldRectangle);
-		dialog.setVisible(true);
-		if (dialog.isOk)
-			command = new ModifyRectangleCmd(oldRectangle, dialog.getRectangle());
+	    if (dialogRectangle == null) 
+	    	dialogRectangle = new DlgRectangle();
+	    dialogRectangle.setModal(true);
+	    dialogRectangle.setRectangle(oldRectangle);
+	    dialogRectangle.setVisible(true);
+		if (dialogRectangle.isCommited())
+			command = new ModifyRectangleCmd(oldRectangle, dialogRectangle.getRectangle());
 	}
 	
-	private void modifyCircle() {
+	public void modifyCircle() {
 		Circle oldCircle = (Circle) selectedShapeList.get(0);
-		DlgCircle dialog = new DlgCircle();
-		dialog.setModal(true);
-		dialog.setCircle(oldCircle);
-		dialog.setVisible(true);
-		if (dialog.isOk) 
-			command = new ModifyCircleCmd(oldCircle, dialog.getCircle());
+	    if (dialogCircle == null) 
+	    	dialogCircle = new DlgCircle();
+	    dialogCircle.setModal(true);
+	    dialogCircle.setCircle(oldCircle);
+	    dialogCircle.setVisible(true);
+		if (dialogCircle.isCommited()) 
+			command = new ModifyCircleCmd(oldCircle, dialogCircle.getCircle());
 	}
 	
-	private void modifyDonut() {
+	public void modifyDonut() {
 		Donut oldDonut = (Donut) selectedShapeList.get(0);
-		DlgDonut dialog = new DlgDonut();
-		dialog.setModal(true);
-		dialog.setDonut(oldDonut);
-		dialog.setVisible(true);
-		if (dialog.isOk)
-			command = new ModifyDonutCmd(oldDonut, dialog.getDonut());
+	    if (dialogDonut == null) 
+	    	dialogDonut = new DlgDonut();
+	    dialogDonut.setModal(true);
+	    dialogDonut.setDonut(oldDonut);
+	    dialogDonut.setVisible(true);
+		if (dialogDonut.isCommited())
+			command = new ModifyDonutCmd(oldDonut, dialogDonut.getDonut());
 	}
 	
-	private void modifyHexagon() {
+	public void modifyHexagon() {
 		HexagonAdapter oldHexagon = (HexagonAdapter) selectedShapeList.get(0);
-		DlgHexagon dialog = new DlgHexagon();
-		dialog.setModal(true);
-		dialog.setHexagon(oldHexagon);
-		dialog.setVisible(true);
-		if (dialog.isOk)
-			command = new ModifyHexagonCmd(oldHexagon, dialog.getHexagon());
+	    if (dialogHexagon == null) 
+	    	dialogHexagon = new DlgHexagon();
+	    dialogHexagon.setModal(true);
+	    dialogHexagon.setHexagon(oldHexagon);
+	    dialogHexagon.setVisible(true);
+		if (dialogHexagon.isCommited())
+			command = new ModifyHexagonCmd(oldHexagon, dialogHexagon.getHexagon());
+		
 	}
 	
-	protected void delete() {
+	public void delete() {
 		if (selectedShapeList.get(0) != null) {
-			int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this object?", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (response == JOptionPane.YES_OPTION) {
 				Shape temp;
 				int position;
 				while(selectedShapeList.size() > 0) {
@@ -296,11 +304,10 @@ public class DrawingController {
 				redoStack.clear();
 				disableButtons();
 				frame.repaint();
-			}
 		}
 	}
 	
-	protected void undo() {
+	public void undo() {
 		command = undoStack.peek();
 		command.unexecute();
 		frame.getTextArea().append("Undo: [ " + undoStack.peek().toString().replace("\n","") + " ]\n");
@@ -310,7 +317,7 @@ public class DrawingController {
 		disableButtons();
 	}
 	
-	protected void redo() {
+	public void redo() {
 		command = redoStack.peek();
 		command.execute();
 		frame.getTextArea().append("Redo: [ " + redoStack.peek().toString().replace("\n","") + " ]\n");
@@ -320,7 +327,7 @@ public class DrawingController {
 		disableButtons();
 	}
 	
-	private void textToList(JTextArea txaArea) {
+	public void textToList(JTextArea txaArea) {
 		String str = txaArea.getText().toString();
 		String[] strSplit = str.split(System.lineSeparator());
 		logList = new ArrayList<String>(Arrays.asList(strSplit));
@@ -339,6 +346,7 @@ public class DrawingController {
 	
 	public void loadLog() {
 		try {
+
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setDialogTitle("Load log");
 			FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(".txt", "txt");
@@ -404,698 +412,9 @@ public class DrawingController {
 	
 	public void loadCmdByCmd() {
 		String line;
-	
 		try {
 			if ((line = bufferReader.readLine()) != null) { 
-				
-				String[] lineElements = line.split(":"); 
-				
-				String valuesLine;
-				
-				if(lineElements[2] != null) {
-					valuesLine = lineElements[2].replaceAll("[^0-9,.]", "");
-				} else {
-					valuesLine = lineElements[1].replaceAll("[^0-9,.]", "");
-				}
-																			
-				String[] values = valuesLine.split(",");
-	
-				if (lineElements[0].equals("Add")) {
-					if (lineElements[1].equals(" Point")) {
-						Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
-								 new Color(Integer.parseInt("-"+(values[2]))));
-						command = new AddShapeCmd(model, p);
-						command.execute();
-						frame.getTextArea().append(command.toString());
-						undoStack.push(command);
-						redoStack.clear();
-					} else if (lineElements[1].equals(" Line")) {
-						Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
-	
-						Line l = new Line(start, end, new Color(Integer.parseInt("-"+(values[4]))));
-	
-						command = new AddShapeCmd(model, l);
-						command.execute();
-						frame.getTextArea().append(command.toString());
-						undoStack.push(command);
-						redoStack.clear();
-					} else if (lineElements[1].equals(" Rectangle")) {
-						Point upperLeft = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						int height = Integer.parseInt(values[2]);
-						int width = Integer.parseInt(values[3]);
-	
-						Rectangle r = new Rectangle(upperLeft, height, width, new Color(Integer.parseInt("-"+(values[5]))),
-								new Color(Integer.parseInt("-"+(values[4]))));
-						command = new AddShapeCmd(model, r);
-						command.execute();
-						frame.getTextArea().append(command.toString());
-						undoStack.push(command);
-						redoStack.clear();
-					} else if (lineElements[1].equals(" Circle")) {
-	
-						Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						int radius = Integer.parseInt(values[2]);
-	
-						Circle c = new Circle(center, radius, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
-						command = new AddShapeCmd(model, c);
-						command.execute();
-						frame.getTextArea().append(command.toString());
-						undoStack.push(command);
-						redoStack.clear();
-					} else if (lineElements[1].equals(" Donut")) {
-	
-						Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						int radius = Integer.parseInt(values[2]);
-						int innerRadius = Integer.parseInt(values[3]);
-	
-						Donut d = new Donut(center, radius, innerRadius, new Color(Integer.parseInt("-"+(values[5]))), new Color(Integer.parseInt("-"+(values[4]))));
-						command = new AddShapeCmd(model, d);
-						command.execute();
-						frame.getTextArea().append(command.toString());
-						undoStack.push(command);
-						redoStack.clear();
-					} else if (lineElements[1].equals(" Hexagon")) {
-						int x = Integer.parseInt(values[0]);
-						int y = Integer.parseInt(values[1]);
-						int r = Integer.parseInt(values[2]);
-						Point p = new Point(x , y);
-						HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
-						command = new AddShapeCmd(model, h);
-						command.execute();
-						frame.getTextArea().append(command.toString());
-						undoStack.push(command);
-						redoStack.clear();
-					}
-				} else if(lineElements[0].equals("Select")){
-					String shape= line.substring(8);
-				
-					for(Shape s : model.getShapes()) {
-						if(s.toString().equals(shape)) {
-							
-							if(!s.isSelected()) {
-								command = new SelectShapeCmd(this, s);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					}
-				} else if(lineElements[0].equals("Unselect")){
-					String shape= line.substring(10);
-					
-					for(Shape s : model.getShapes()) {
-						if(s.toString().equals(shape)) {
-							
-							if(s.isSelected()) {
-								command = new UnselectShapeCmd(this, s);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					}
-				} else if (lineElements[0].equals("Modify")) {
-					String newValuesLine = lineElements[3].replaceAll("[^0-9,.]", "");
-					String[] newValues = newValuesLine.split(",");
-	
-					if (lineElements[1].equals(" Point")) {
-						
-						Point oldPoint = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), true,
-								new Color(Integer.parseInt("-"+(values[2]))));
-						Point newPoint = new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1]),
-								new Color(Integer.parseInt("-"+(newValues[2]))));
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(oldPoint.toString())) {
-								command = new ModifyPointCmd((Point) s, newPoint);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Line")) {
-	
-						Line oldLine = new Line(new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
-								new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3])),
-								true,
-								new Color(Integer.parseInt("-"+(values[4]))));
-						Line newLine = new Line(
-								new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
-								new Point(Integer.parseInt(newValues[2]), Integer.parseInt(newValues[3])),
-								new Color(Integer.parseInt("-"+(newValues[4]))));
-						
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(oldLine.toString())) {
-								command = new ModifyLineCmd((Line) s, newLine);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Rectangle")) {
-						Rectangle oldRectangle = new Rectangle(
-								new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
-								Integer.parseInt(values[2]), Integer.parseInt(values[3]), 
-								true,
-								new Color(Integer.parseInt("-"+(values[4]))),
-								new Color(Integer.parseInt("-"+(values[5]))));
-						Rectangle newRectangle = new Rectangle(
-								new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
-								Integer.parseInt(newValues[2]), Integer.parseInt(newValues[3]),
-								new Color(Integer.parseInt("-"+(newValues[4]))), new Color(Integer.parseInt("-"+(newValues[5]))));
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(oldRectangle.toString())) {
-								command = new ModifyRectangleCmd((Rectangle) s, newRectangle);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Circle")) {
-	
-						Circle oldCircle = new Circle(
-								new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
-								Integer.parseInt(values[2]), 
-								true,
-								new Color(Integer.parseInt("-"+(values[4]))), 
-								new Color(Integer.parseInt("-"+(values[3]))));
-						Circle newCircle = new Circle(
-								new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
-								Integer.parseInt(newValues[2]), new Color(Integer.parseInt("-"+(newValues[4]))), new Color(Integer.parseInt("-"+(newValues[3]))));
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(oldCircle.toString())) {
-								command = new ModifyCircleCmd((Circle) s, newCircle);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Donut")) {
-	
-						Donut oldDonut = new Donut(
-								new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
-								Integer.parseInt(values[2]), Integer.parseInt(values[3]), 
-								true,
-								new Color(Integer.parseInt("-"+(values[5]))), 
-								new Color(Integer.parseInt("-"+(values[4]))));
-						Donut newDonut = new Donut(
-								new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
-								Integer.parseInt(newValues[2]), Integer.parseInt(newValues[3]), new Color(Integer.parseInt("-"+(newValues[5]))), new Color(Integer.parseInt("-"+(newValues[4]))));
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(oldDonut.toString())) {
-								command = new ModifyDonutCmd((Donut) s, newDonut);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Hexagon")) {
-						Point p = new Point(Integer.parseInt(values[0]) , Integer.parseInt(values[1]));
-						HexagonAdapter oldHexagon = new HexagonAdapter(p, Integer.parseInt(values[2]), 
-								true,
-								new Color(Integer.parseInt("-"+(values[4]))),
-								new Color(Integer.parseInt("-"+(values[3]))));
-						HexagonAdapter newHexagon = new HexagonAdapter(p, Integer.parseInt(newValues[2]),
-								new Color(Integer.parseInt("-"+(newValues[4]))), new Color(Integer.parseInt("-"+(newValues[3]))));
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(oldHexagon.toString())) {
-								command = new ModifyHexagonCmd((HexagonAdapter) s, newHexagon);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								redoStack.clear();
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					}
-				} else if (lineElements[0].equals("Delete")) {
-					if (lineElements[1].equals(" Point")) {
-						String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
-						String[] sValues = shapeValues.split(",");
-
-						Point p = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]), 
-								true, new Color(Integer.parseInt("-"+(sValues[2]))));
-						int position = Integer.parseInt(sValues[3]);
-						
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(p.toString())) {
-								Shape temp = s;
-								position = model.getShapes().indexOf(s);
-								command = new RemoveShapeCmd(model, temp, position);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								selectedShapeList.remove(temp);
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Line")) {
-						String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
-						String[] sValues = shapeValues.split(",");
-
-						Point start = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
-						Point end = new Point(Integer.parseInt(sValues[2]), Integer.parseInt(sValues[3]));
-						Color color = new Color(Integer.parseInt("-"+(sValues[4])));
-						int position = Integer.parseInt(sValues[5]);
-						
-						Line l = new Line(start, end, color);
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(l.toString())) {
-								Shape temp = s;
-								position = model.getShapes().indexOf(s);
-								command = new RemoveShapeCmd(model, temp, position);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								selectedShapeList.remove(temp);
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Rectangle")) {
-						String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
-						String[] sValues = shapeValues.split(",");
-
-						Point start = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
-						int height = Integer.parseInt(sValues[2]);
-						int width = Integer.parseInt(sValues[3]);
-						Color color = new Color(Integer.parseInt("-"+(sValues[5])));
-						Color innerColor = new Color(Integer.parseInt("-"+(sValues[4])));
-						int position = Integer.parseInt(sValues[6]);
-						
-						Rectangle r = new Rectangle(start, height, width, color, innerColor);
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(r.toString())) {
-								Shape temp = s;
-								position = model.getShapes().indexOf(s);
-								command = new RemoveShapeCmd(model, temp, position);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								selectedShapeList.remove(temp);
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Circle")) {
-						String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
-						String[] sValues = shapeValues.split(",");
-
-						Point center = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
-						int radius = Integer.parseInt(sValues[2]);
-						Color color = new Color(Integer.parseInt("-"+(sValues[4])));
-						Color innerColor = new Color(Integer.parseInt("-"+(sValues[3])));
-						int position = Integer.parseInt(sValues[5]);
-
-						Circle c = new Circle(center, radius, color, innerColor);
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(c.toString())) {
-								Shape temp = s;
-								position = model.getShapes().indexOf(s);
-								command = new RemoveShapeCmd(model, temp, position);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								selectedShapeList.remove(temp);
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Donut")) {
-						String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
-						String[] sValues = shapeValues.split(",");
-
-						Point center = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
-						int radius = Integer.parseInt(sValues[2]);
-						int innerRadius = Integer.parseInt(sValues[3]);
-						Color color = new Color(Integer.parseInt("-"+(sValues[5])));
-						Color innerColor = new Color(Integer.parseInt("-"+(sValues[4])));
-						int position = Integer.parseInt(sValues[6]);
-
-						Donut d = new Donut(center, radius, innerRadius, color, innerColor);
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(d.toString())) {
-								Shape temp = s;
-								position = model.getShapes().indexOf(s);
-								command = new RemoveShapeCmd(model, temp, position);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								selectedShapeList.remove(temp);
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Hexagon")) {
-						String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
-						String[] sValues = shapeValues.split(",");
-
-						Color color = new Color(Integer.parseInt("-"+(sValues[4])));
-						Color innerColor = new Color(Integer.parseInt("-"+(sValues[3])));
-						int position = Integer.parseInt(sValues[5]);
-
-						Point p = new Point(Integer.parseInt(values[0]) , Integer.parseInt(values[1]));
-						HexagonAdapter h = new HexagonAdapter(p , Integer.parseInt(sValues[2]), color, innerColor);
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(h.toString())) {
-								Shape temp = s;
-								position = model.getShapes().indexOf(s);
-								command = new RemoveShapeCmd(model, temp, position);
-								command.execute();
-								frame.getTextArea().append(command.toString());
-								undoStack.push(command);
-								selectedShapeList.remove(temp);
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					}
-				} else if ((lineElements[0].equals("Move to back")) || (lineElements[0].equals("Move to front"))
-						|| (lineElements[0].equals("Bring to back")) || (lineElements[0].equals("Bring to front"))) {
-	
-					if (lineElements[1].equals(" Point")) {
-						Color color = new Color(Integer.parseInt("-"+(values[2])));
-						Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), color);
-						//int position = Integer.parseInt(values[3]);
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(p.toString())) {
-								int position = model.getShapes().indexOf(s);
-								if (lineElements[0].equals("Move to back")) {
-									command = new ToBackCmd(model, (Point) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Move to front")){
-									command = new ToFrontCmd(model, (Point) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to back")){
-									command = new BringToBackCmd(model, (Point) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to front")){
-									command = new BringToFrontCmd(model, (Point) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Line")) {
-	
-						Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
-						Color color = new Color(Integer.parseInt("-"+(values[4])));
-						//int position = Integer.parseInt(values[5]);
-	
-						Line l = new Line(start, end, color);
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(l.toString())) {
-								int position = model.getShapes().indexOf(s);
-								if (lineElements[0].equals("Move to back")) {
-									command = new ToBackCmd(model, (Line) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Move to front")){
-									command = new ToFrontCmd(model, (Line) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to back")){
-									command = new BringToBackCmd(model, (Line) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to front")){
-									command = new BringToFrontCmd(model, (Line) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Rectangle")) {
-	
-						Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						int height = Integer.parseInt(values[2]);
-						int width = Integer.parseInt(values[3]);
-						Color color = new Color(Integer.parseInt("-"+(values[4])));
-						Color innerColor = new Color(Integer.parseInt("-"+(values[5])));
-						//int position = Integer.parseInt(values[6]);
-	
-						Rectangle r = new Rectangle(start, height, width, color, innerColor);
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(r.toString())) {
-								int position = model.getShapes().indexOf(s);
-								if (lineElements[0].equals("Move to back")) {
-									command = new ToBackCmd(model, (Rectangle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Move to front")){
-									command = new ToFrontCmd(model, (Rectangle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to back")){
-									command = new BringToBackCmd(model, (Rectangle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to front")){
-									command = new BringToFrontCmd(model, (Rectangle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Circle")) {
-	
-						Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						int radius = Integer.parseInt(values[2]);
-						Color color = new Color(Integer.parseInt("-"+(values[4])));
-						Color innerColor = new Color(Integer.parseInt("-"+(values[3])));
-						//int position = Integer.parseInt(values[5]);
-	
-						Circle c = new Circle(center, radius, color, innerColor);
-	
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(c.toString())) {
-								int position = model.getShapes().indexOf(s);
-								if (lineElements[0].equals("Move to back")) {
-									command = new ToBackCmd(model, (Circle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Move to front")){
-									command = new ToFrontCmd(model, (Circle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to back")){
-									command = new BringToBackCmd(model, (Circle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to front")){
-									command = new BringToFrontCmd(model, (Circle) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Donut")) {
-	
-						Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-						int radius = Integer.parseInt(values[2]);
-						int innerRadius = Integer.parseInt(values[3]);
-						Color color = new Color(Integer.parseInt("-"+(values[5])));
-						Color innerColor = new Color(Integer.parseInt("-"+(values[4])));
-						//int position = Integer.parseInt(values[6]);
-	
-						Donut d = new Donut(center, radius, innerRadius, color, innerColor);
-	
-						for (Shape s : model.getShapes()) {
-							int position = model.getShapes().indexOf(s);
-							if (s.toString().equals(d.toString())) {
-								if (lineElements[0].equals("Move to back")) {
-									command = new ToBackCmd(model, (Donut) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Move to front")){
-									command = new ToFrontCmd(model, (Donut) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to back")){
-									command = new BringToBackCmd(model, (Donut) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to front")){
-									command = new BringToFrontCmd(model, (Donut) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					} else if (lineElements[1].equals(" Hexagon")) {
-	
-						int x = Integer.parseInt(values[0]);
-						int y = Integer.parseInt(values[1]);
-						int r = Integer.parseInt(values[2]);
-						Point p = new Point(x , y);
-						HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
-						//int position = Integer.parseInt(values[5]);
-						
-						for (Shape s : model.getShapes()) {
-							if (s.toString().equals(h.toString())) {
-								int position = model.getShapes().indexOf(s);
-								if (lineElements[0].equals("Move to back")) {
-									command = new ToBackCmd(model, (HexagonAdapter) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Move to front")){
-									command = new ToFrontCmd(model, (HexagonAdapter) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to back")){
-									command = new BringToBackCmd(model, (HexagonAdapter) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								else if (lineElements[0].equals("Bring to front")){
-									command = new BringToFrontCmd(model, (HexagonAdapter) s, position);
-									command.execute();
-									frame.getTextArea().append(command.toString());
-									undoStack.push(command);
-									redoStack.clear();
-								}
-								disableButtons();
-								frame.repaint();
-								break;
-							}
-						}
-					}
-				} else if (lineElements[0].equals("Undo") || lineElements[0].equals("Redo")) {
-					if (lineElements[0].equals("Undo")) {
-						undo();
-					}
-					else if (lineElements[0].equals("Redo")) {
-						redo();
-					}
-				}
-				disableButtons();
-				frame.getView().repaint();
+				readLine(line);
 			} else {
 				frame.getBtnCmdByCmd().setEnabled(false);
 			}
@@ -1104,6 +423,699 @@ public class DrawingController {
 		}
 	}
 	
+	public void readLine(String line) {
+		
+		String[] lineElements = line.split(":"); 
+		
+		String valuesLine;
+		
+		if(lineElements[2] != null) {
+			valuesLine = lineElements[2].replaceAll("[^0-9,.]", "");
+		} else {
+			valuesLine = lineElements[1].replaceAll("[^0-9,.]", "");
+		}
+																	
+		String[] values = valuesLine.split(",");
+
+		if (lineElements[0].equals("Add")) {
+			if (lineElements[1].equals(" Point")) {
+				Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
+						 new Color(Integer.parseInt("-"+(values[2]))));
+				command = new AddShapeCmd(model, p);
+				command.execute();
+				frame.getTextArea().append(command.toString());
+				undoStack.push(command);
+				redoStack.clear();
+			} else if (lineElements[1].equals(" Line")) {
+				Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+
+				Line l = new Line(start, end, new Color(Integer.parseInt("-"+(values[4]))));
+
+				command = new AddShapeCmd(model, l);
+				command.execute();
+				frame.getTextArea().append(command.toString());
+				undoStack.push(command);
+				redoStack.clear();
+			} else if (lineElements[1].equals(" Rectangle")) {
+				Point upperLeft = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				int height = Integer.parseInt(values[2]);
+				int width = Integer.parseInt(values[3]);
+
+				Rectangle r = new Rectangle(upperLeft, height, width, new Color(Integer.parseInt("-"+(values[5]))),
+						new Color(Integer.parseInt("-"+(values[4]))));
+				command = new AddShapeCmd(model, r);
+				command.execute();
+				frame.getTextArea().append(command.toString());
+				undoStack.push(command);
+				redoStack.clear();
+			} else if (lineElements[1].equals(" Circle")) {
+
+				Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				int radius = Integer.parseInt(values[2]);
+
+				Circle c = new Circle(center, radius, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
+				command = new AddShapeCmd(model, c);
+				command.execute();
+				frame.getTextArea().append(command.toString());
+				undoStack.push(command);
+				redoStack.clear();
+			} else if (lineElements[1].equals(" Donut")) {
+
+				Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				int radius = Integer.parseInt(values[2]);
+				int innerRadius = Integer.parseInt(values[3]);
+
+				Donut d = new Donut(center, radius, innerRadius, new Color(Integer.parseInt("-"+(values[5]))), new Color(Integer.parseInt("-"+(values[4]))));
+				command = new AddShapeCmd(model, d);
+				command.execute();
+				frame.getTextArea().append(command.toString());
+				undoStack.push(command);
+				redoStack.clear();
+			} else if (lineElements[1].equals(" Hexagon")) {
+				int x = Integer.parseInt(values[0]);
+				int y = Integer.parseInt(values[1]);
+				int r = Integer.parseInt(values[2]);
+				Point p = new Point(x , y);
+				HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
+				command = new AddShapeCmd(model, h);
+				command.execute();
+				frame.getTextArea().append(command.toString());
+				undoStack.push(command);
+				redoStack.clear();
+			}
+		} else if(lineElements[0].equals("Select")){
+			String shape= line.substring(8);
+		
+			for(Shape s : model.getShapes()) {
+				if(s.toString().equals(shape)) {
+					
+					if(!s.isSelected()) {
+						command = new SelectShapeCmd(this, s);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			}
+		} else if(lineElements[0].equals("Unselect")){
+			String shape= line.substring(10);
+			
+			for(Shape s : model.getShapes()) {
+				if(s.toString().equals(shape)) {
+					
+					if(s.isSelected()) {
+						command = new UnselectShapeCmd(this, s);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			}
+		} else if (lineElements[0].equals("Modify")) {
+			String newValuesLine = lineElements[3].replaceAll("[^0-9,.]", "");
+			String[] newValues = newValuesLine.split(",");
+
+			if (lineElements[1].equals(" Point")) {
+				
+				Point oldPoint = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), true,
+						new Color(Integer.parseInt("-"+(values[2]))));
+				Point newPoint = new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1]),
+						new Color(Integer.parseInt("-"+(newValues[2]))));
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(oldPoint.toString())) {
+						command = new ModifyPointCmd((Point) s, newPoint);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Line")) {
+
+				Line oldLine = new Line(new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
+						new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3])),
+						true,
+						new Color(Integer.parseInt("-"+(values[4]))));
+				Line newLine = new Line(
+						new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
+						new Point(Integer.parseInt(newValues[2]), Integer.parseInt(newValues[3])),
+						new Color(Integer.parseInt("-"+(newValues[4]))));
+				
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(oldLine.toString())) {
+						command = new ModifyLineCmd((Line) s, newLine);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Rectangle")) {
+				Rectangle oldRectangle = new Rectangle(
+						new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
+						Integer.parseInt(values[2]), Integer.parseInt(values[3]), 
+						true,
+						new Color(Integer.parseInt("-"+(values[5]))),
+						new Color(Integer.parseInt("-"+(values[4]))));
+				Rectangle newRectangle = new Rectangle(
+						new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
+						Integer.parseInt(newValues[2]), Integer.parseInt(newValues[3]),
+						new Color(Integer.parseInt("-"+(newValues[4]))), new Color(Integer.parseInt("-"+(newValues[5]))));
+
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(oldRectangle.toString())) {
+						command = new ModifyRectangleCmd((Rectangle) s, newRectangle);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Circle")) {
+
+				Circle oldCircle = new Circle(
+						new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
+						Integer.parseInt(values[2]), 
+						true,
+						new Color(Integer.parseInt("-"+(values[4]))), 
+						new Color(Integer.parseInt("-"+(values[3]))));
+				Circle newCircle = new Circle(
+						new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
+						Integer.parseInt(newValues[2]), new Color(Integer.parseInt("-"+(newValues[4]))), new Color(Integer.parseInt("-"+(newValues[3]))));
+
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(oldCircle.toString())) {
+						command = new ModifyCircleCmd((Circle) s, newCircle);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Donut")) {
+
+				Donut oldDonut = new Donut(
+						new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
+						Integer.parseInt(values[2]), Integer.parseInt(values[3]), 
+						true,
+						new Color(Integer.parseInt("-"+(values[5]))), 
+						new Color(Integer.parseInt("-"+(values[4]))));
+				Donut newDonut = new Donut(
+						new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1])),
+						Integer.parseInt(newValues[2]), Integer.parseInt(newValues[3]), new Color(Integer.parseInt("-"+(newValues[5]))), new Color(Integer.parseInt("-"+(newValues[4]))));
+
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(oldDonut.toString())) {
+						command = new ModifyDonutCmd((Donut) s, newDonut);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Hexagon")) {
+				Point p = new Point(Integer.parseInt(values[0]) , Integer.parseInt(values[1]));
+				Point newP = new Point(Integer.parseInt(newValues[0]) , Integer.parseInt(newValues[1]));
+				HexagonAdapter oldHexagon = new HexagonAdapter(p, Integer.parseInt(values[2]), 
+						true,
+						new Color(Integer.parseInt("-"+(values[4]))),
+						new Color(Integer.parseInt("-"+(values[3]))));
+				HexagonAdapter newHexagon = new HexagonAdapter(newP, Integer.parseInt(newValues[2]),
+						new Color(Integer.parseInt("-"+(newValues[4]))), new Color(Integer.parseInt("-"+(newValues[3]))));
+
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(oldHexagon.toString())) {
+						command = new ModifyHexagonCmd((HexagonAdapter) s, newHexagon);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						redoStack.clear();
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			}
+		} else if (lineElements[0].equals("Delete")) {
+			if (lineElements[1].equals(" Point")) {
+				String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
+				String[] sValues = shapeValues.split(",");
+
+				Point p = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]), 
+						true, new Color(Integer.parseInt("-"+(sValues[2]))));
+				int position = Integer.parseInt(sValues[3]);
+				
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(p.toString())) {
+						Shape temp = s;
+						position = model.getShapes().indexOf(s);
+						command = new RemoveShapeCmd(model, temp, position);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						selectedShapeList.remove(temp);
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Line")) {
+				String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
+				String[] sValues = shapeValues.split(",");
+
+				Point start = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
+				Point end = new Point(Integer.parseInt(sValues[2]), Integer.parseInt(sValues[3]));
+				Color color = new Color(Integer.parseInt("-"+(sValues[4])));
+				int position = Integer.parseInt(sValues[5]);
+				
+				Line l = new Line(start, end, color);
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(l.toString())) {
+						Shape temp = s;
+						position = model.getShapes().indexOf(s);
+						command = new RemoveShapeCmd(model, temp, position);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						selectedShapeList.remove(temp);
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Rectangle")) {
+				String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
+				String[] sValues = shapeValues.split(",");
+
+				Point start = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
+				int height = Integer.parseInt(sValues[2]);
+				int width = Integer.parseInt(sValues[3]);
+				Color color = new Color(Integer.parseInt("-"+(sValues[5])));
+				Color innerColor = new Color(Integer.parseInt("-"+(sValues[4])));
+				int position = Integer.parseInt(sValues[6]);
+				
+				Rectangle r = new Rectangle(start, height, width, color, innerColor);
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(r.toString())) {
+						Shape temp = s;
+						position = model.getShapes().indexOf(s);
+						command = new RemoveShapeCmd(model, temp, position);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						selectedShapeList.remove(temp);
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Circle")) {
+				String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
+				String[] sValues = shapeValues.split(",");
+
+				Point center = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
+				int radius = Integer.parseInt(sValues[2]);
+				Color color = new Color(Integer.parseInt("-"+(sValues[4])));
+				Color innerColor = new Color(Integer.parseInt("-"+(sValues[3])));
+				int position = Integer.parseInt(sValues[5]);
+
+				Circle c = new Circle(center, radius, color, innerColor);
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(c.toString())) {
+						Shape temp = s;
+						position = model.getShapes().indexOf(s);
+						command = new RemoveShapeCmd(model, temp, position);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						selectedShapeList.remove(temp);
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Donut")) {
+				String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
+				String[] sValues = shapeValues.split(",");
+
+				Point center = new Point(Integer.parseInt(sValues[0]), Integer.parseInt(sValues[1]));
+				int radius = Integer.parseInt(sValues[2]);
+				int innerRadius = Integer.parseInt(sValues[3]);
+				Color color = new Color(Integer.parseInt("-"+(sValues[5])));
+				Color innerColor = new Color(Integer.parseInt("-"+(sValues[4])));
+				int position = Integer.parseInt(sValues[6]);
+
+				Donut d = new Donut(center, radius, innerRadius, color, innerColor);
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(d.toString())) {
+						Shape temp = s;
+						position = model.getShapes().indexOf(s);
+						command = new RemoveShapeCmd(model, temp, position);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						selectedShapeList.remove(temp);
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Hexagon")) {
+				String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
+				String[] sValues = shapeValues.split(",");
+
+				Color color = new Color(Integer.parseInt("-"+(sValues[4])));
+				Color innerColor = new Color(Integer.parseInt("-"+(sValues[3])));
+				int position = Integer.parseInt(sValues[5]);
+
+				Point p = new Point(Integer.parseInt(values[0]) , Integer.parseInt(values[1]));
+				HexagonAdapter h = new HexagonAdapter(p , Integer.parseInt(sValues[2]), color, innerColor);
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(h.toString())) {
+						Shape temp = s;
+						position = model.getShapes().indexOf(s);
+						command = new RemoveShapeCmd(model, temp, position);
+						command.execute();
+						frame.getTextArea().append(command.toString());
+						undoStack.push(command);
+						selectedShapeList.remove(temp);
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			}
+		} else if ((lineElements[0].equals("Move to back")) || (lineElements[0].equals("Move to front"))
+				|| (lineElements[0].equals("Bring to back")) || (lineElements[0].equals("Bring to front"))) {
+
+			if (lineElements[1].equals(" Point")) {
+				Color color = new Color(Integer.parseInt("-"+(values[2])));
+				Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), color);
+				//int position = Integer.parseInt(values[3]);
+
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(p.toString())) {
+						int position = model.getShapes().indexOf(s);
+						if (lineElements[0].equals("Move to back")) {
+							command = new ToBackCmd(model, (Point) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Move to front")){
+							command = new ToFrontCmd(model, (Point) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to back")){
+							command = new BringToBackCmd(model, (Point) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to front")){
+							command = new BringToFrontCmd(model, (Point) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Line")) {
+
+				Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+				Color color = new Color(Integer.parseInt("-"+(values[4])));
+				//int position = Integer.parseInt(values[5]);
+
+				Line l = new Line(start, end, color);
+
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(l.toString())) {
+						int position = model.getShapes().indexOf(s);
+						if (lineElements[0].equals("Move to back")) {
+							command = new ToBackCmd(model, (Line) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Move to front")){
+							command = new ToFrontCmd(model, (Line) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to back")){
+							command = new BringToBackCmd(model, (Line) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to front")){
+							command = new BringToFrontCmd(model, (Line) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Rectangle")) {
+
+				Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				int height = Integer.parseInt(values[2]);
+				int width = Integer.parseInt(values[3]);
+				Color color = new Color(Integer.parseInt("-"+(values[4])));
+				Color innerColor = new Color(Integer.parseInt("-"+(values[5])));
+				//int position = Integer.parseInt(values[6]);
+
+				Rectangle r = new Rectangle(start, height, width, innerColor, color);
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(r.toString())) {
+						int position = model.getShapes().indexOf(s);
+						if (lineElements[0].equals("Move to back")) {
+							command = new ToBackCmd(model, (Rectangle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Move to front")){
+							command = new ToFrontCmd(model, (Rectangle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to back")){
+							command = new BringToBackCmd(model, (Rectangle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to front")){
+							command = new BringToFrontCmd(model, (Rectangle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Circle")) {
+
+				Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				int radius = Integer.parseInt(values[2]);
+				Color color = new Color(Integer.parseInt("-"+(values[4])));
+				Color innerColor = new Color(Integer.parseInt("-"+(values[3])));
+				//int position = Integer.parseInt(values[5]);
+
+				Circle c = new Circle(center, radius, color, innerColor);
+
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(c.toString())) {
+						int position = model.getShapes().indexOf(s);
+						if (lineElements[0].equals("Move to back")) {
+							command = new ToBackCmd(model, (Circle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Move to front")){
+							command = new ToFrontCmd(model, (Circle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to back")){
+							command = new BringToBackCmd(model, (Circle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to front")){
+							command = new BringToFrontCmd(model, (Circle) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Donut")) {
+
+				Point center = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+				int radius = Integer.parseInt(values[2]);
+				int innerRadius = Integer.parseInt(values[3]);
+				Color color = new Color(Integer.parseInt("-"+(values[5])));
+				Color innerColor = new Color(Integer.parseInt("-"+(values[4])));
+				//int position = Integer.parseInt(values[6]);
+
+				Donut d = new Donut(center, radius, innerRadius, color, innerColor);
+
+				for (Shape s : model.getShapes()) {
+					int position = model.getShapes().indexOf(s);
+					if (s.toString().equals(d.toString())) {
+						if (lineElements[0].equals("Move to back")) {
+							command = new ToBackCmd(model, (Donut) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Move to front")){
+							command = new ToFrontCmd(model, (Donut) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to back")){
+							command = new BringToBackCmd(model, (Donut) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to front")){
+							command = new BringToFrontCmd(model, (Donut) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			} else if (lineElements[1].equals(" Hexagon")) {
+
+				int x = Integer.parseInt(values[0]);
+				int y = Integer.parseInt(values[1]);
+				int r = Integer.parseInt(values[2]);
+				Point p = new Point(x , y);
+				HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
+				//int position = Integer.parseInt(values[5]);
+				
+				for (Shape s : model.getShapes()) {
+					if (s.toString().equals(h.toString())) {
+						int position = model.getShapes().indexOf(s);
+						if (lineElements[0].equals("Move to back")) {
+							command = new ToBackCmd(model, (HexagonAdapter) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Move to front")){
+							command = new ToFrontCmd(model, (HexagonAdapter) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to back")){
+							command = new BringToBackCmd(model, (HexagonAdapter) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						else if (lineElements[0].equals("Bring to front")){
+							command = new BringToFrontCmd(model, (HexagonAdapter) s, position);
+							command.execute();
+							frame.getTextArea().append(command.toString());
+							undoStack.push(command);
+							redoStack.clear();
+						}
+						disableButtons();
+						frame.repaint();
+						break;
+					}
+				}
+			}
+		} else if (lineElements[0].equals("Undo") || lineElements[0].equals("Redo")) {
+			if (lineElements[0].equals("Undo")) {
+				undo();
+			}
+			else if (lineElements[0].equals("Redo")) {
+				redo();
+			}
+		}
+		disableButtons();
+		frame.getView().repaint();
+		
+	}
+
 	public void toBack() {
 		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
@@ -1235,6 +1247,14 @@ public class DrawingController {
 		this.dialogHexagon = dialogHexagon;
 	}
 	
+	public void setDialogPoint(DlgPoint dialogPoint) {
+		this.dialogPoint = dialogPoint;
+	}
+
+	public void setDialogLine(DlgLine dialogLine) {
+		this.dialogLine = dialogLine;
+	}
+
 	public ArrayList<Shape> getSelectedShapeList() {
 		return selectedShapeList;
 	}

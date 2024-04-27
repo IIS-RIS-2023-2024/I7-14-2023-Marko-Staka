@@ -109,6 +109,19 @@ public class Rectangle extends SurfaceShape {
 		return height * width;
 	}
 	
+	public boolean equals(Object obj) {
+		if (obj instanceof Rectangle) {
+			Rectangle prosledjeni = (Rectangle) obj;
+			if (this.upperLeftPoint.equals(prosledjeni.getUpperLeftPoint()) && this.width == prosledjeni.getWidth() && this.height == prosledjeni.getHeight()) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
 	public Point getUpperLeftPoint() {
 		return upperLeftPoint;
 	}

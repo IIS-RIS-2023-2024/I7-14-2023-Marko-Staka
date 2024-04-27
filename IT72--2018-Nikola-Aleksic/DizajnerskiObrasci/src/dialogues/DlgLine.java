@@ -241,5 +241,5 @@ public class DlgLine extends JDialog {
 	public boolean isCommited() {
 		return this.isOk;
 	}
-
+	
 }

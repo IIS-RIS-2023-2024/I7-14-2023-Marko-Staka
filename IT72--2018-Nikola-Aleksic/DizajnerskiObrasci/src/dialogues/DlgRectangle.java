@@ -269,5 +269,4 @@ public class DlgRectangle extends JDialog {
 		return this.isOk;
 	}
 	
-	
 }

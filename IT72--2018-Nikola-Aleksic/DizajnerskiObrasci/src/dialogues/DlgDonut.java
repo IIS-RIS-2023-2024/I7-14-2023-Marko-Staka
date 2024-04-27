@@ -279,4 +279,5 @@ public class DlgDonut extends JDialog {
 	public boolean isCommited() {
 		return this.isOk;
 	}
+	
 }
