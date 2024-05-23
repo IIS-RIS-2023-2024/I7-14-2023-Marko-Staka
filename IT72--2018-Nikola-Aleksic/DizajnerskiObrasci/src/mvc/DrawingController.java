@@ -368,15 +368,6 @@ public class DrawingController {
 				JOptionPane.showMessageDialog(null, "Log is loaded! Use load command button to draw!");
 				frame.getBtnCmdByCmd().setEnabled(true);
 				
-				/*String stringLine;
-				
-				frame.getTextArea().setText("");
-				while ((stringLine = bufferReader.readLine()) != null) {
-					frame.getTextArea().append(stringLine + "\n");
-				}
-				frame.getBtnCmdByCmd().setEnabled(true);
-				
-				frame.getView().repaint();*/
 			}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -439,13 +430,7 @@ public class DrawingController {
 
 		if (lineElements[0].equals("Add")) {
 			if (lineElements[1].equals(" Point")) {
-				Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
-						 new Color(Integer.parseInt("-"+(values[2]))));
-				command = new AddShapeCmd(model, p);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				undoStack.push(command);
-				redoStack.clear();
+				readAddPoint(values);
 			} else if (lineElements[1].equals(" Line")) {
 				Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
 				Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
@@ -835,7 +820,6 @@ public class DrawingController {
 			if (lineElements[1].equals(" Point")) {
 				Color color = new Color(Integer.parseInt("-"+(values[2])));
 				Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), color);
-				//int position = Integer.parseInt(values[3]);
 
 				for (Shape s : model.getShapes()) {
 					if (s.toString().equals(p.toString())) {
@@ -878,7 +862,6 @@ public class DrawingController {
 				Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
 				Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 				Color color = new Color(Integer.parseInt("-"+(values[4])));
-				//int position = Integer.parseInt(values[5]);
 
 				Line l = new Line(start, end, color);
 
@@ -925,7 +908,6 @@ public class DrawingController {
 				int width = Integer.parseInt(values[3]);
 				Color color = new Color(Integer.parseInt("-"+(values[4])));
 				Color innerColor = new Color(Integer.parseInt("-"+(values[5])));
-				//int position = Integer.parseInt(values[6]);
 
 				Rectangle r = new Rectangle(start, height, width, innerColor, color);
 				for (Shape s : model.getShapes()) {
@@ -970,7 +952,6 @@ public class DrawingController {
 				int radius = Integer.parseInt(values[2]);
 				Color color = new Color(Integer.parseInt("-"+(values[4])));
 				Color innerColor = new Color(Integer.parseInt("-"+(values[3])));
-				//int position = Integer.parseInt(values[5]);
 
 				Circle c = new Circle(center, radius, color, innerColor);
 
@@ -1017,7 +998,6 @@ public class DrawingController {
 				int innerRadius = Integer.parseInt(values[3]);
 				Color color = new Color(Integer.parseInt("-"+(values[5])));
 				Color innerColor = new Color(Integer.parseInt("-"+(values[4])));
-				//int position = Integer.parseInt(values[6]);
 
 				Donut d = new Donut(center, radius, innerRadius, color, innerColor);
 
@@ -1064,7 +1044,6 @@ public class DrawingController {
 				int r = Integer.parseInt(values[2]);
 				Point p = new Point(x , y);
 				HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
-				//int position = Integer.parseInt(values[5]);
 				
 				for (Shape s : model.getShapes()) {
 					if (s.toString().equals(h.toString())) {
@@ -1116,6 +1095,16 @@ public class DrawingController {
 		
 	}
 
+	public void readAddPoint(String[] values) {
+		Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
+				 new Color(Integer.parseInt("-"+(values[2]))));
+		command = new AddShapeCmd(model, p);
+		command.execute();
+		frame.getTextArea().append(command.toString());
+		undoStack.push(command);
+		redoStack.clear();
+	}
+		
 	public void toBack() {
 		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
