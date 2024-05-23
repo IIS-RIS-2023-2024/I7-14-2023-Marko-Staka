@@ -31,7 +31,6 @@ import geometry.Rectangle;
 import mvc.DrawingController;
 import mvc.DrawingFrame;
 import mvc.DrawingModel;
-import services.ModificationService;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ModifyTest {
@@ -208,7 +207,7 @@ public class ModifyTest {
 		controller.getSelectedShapeList().add(new Point(1,1));
 		controller.getSelectedShapeList().add(new Point(2,2));
 		
-		controller.disableButtons();
+		controller.changeButtonsAvailability();
 
 		assertFalse(frame.getBtnModify().isEnabled());
 	}

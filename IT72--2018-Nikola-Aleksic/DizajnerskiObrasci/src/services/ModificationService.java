@@ -21,26 +21,19 @@ import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
 import mvc.DrawingController;
-import mvc.DrawingFrame;
-import mvc.DrawingModel;
 
 public class ModificationService {
-	private DrawingModel model;
-	private DrawingFrame frame;
+	
 	private DrawingController controller;
+	private Command command;
+	private DlgPoint dialogPoint;
+	private DlgLine dialogLine;
+	private DlgRectangle dialogRectangle;
+	private DlgCircle dialogCircle;
+	private DlgDonut dialogDonut;
+	private DlgHexagon dialogHexagon;
 	
-	public Command command;
-	
-	DlgPoint dialogPoint;
-	DlgLine dialogLine;
-	DlgRectangle dialogRectangle;
-	DlgCircle dialogCircle;
-	DlgDonut dialogDonut;
-	DlgHexagon dialogHexagon;
-	
-	public ModificationService(DrawingModel model, DrawingFrame frame, DrawingController controller) {
-		this.model = model;
-		this.frame = frame;
+	public ModificationService(DrawingController controller) {
 		this.controller = controller;
 	}
 	
