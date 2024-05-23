@@ -9,8 +9,8 @@ public class ModifyPointCmd implements Command{
 	private static Point original = new Point();
 
 	public ModifyPointCmd(Point oldState, Point newState) {
-		this.oldState = oldState;
-		this.newState = newState;
+		ModifyPointCmd.oldState = oldState;
+		ModifyPointCmd.newState = newState;
 	}
 	
 	@Override

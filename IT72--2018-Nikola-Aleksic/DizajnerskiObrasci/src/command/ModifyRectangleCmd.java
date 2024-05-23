@@ -9,8 +9,8 @@ public class ModifyRectangleCmd implements Command{
 	private static Rectangle original = new Rectangle();
 
 	public ModifyRectangleCmd(Rectangle oldState, Rectangle newState) {
-		this.oldState = oldState;
-		this.newState = newState;
+		ModifyRectangleCmd.oldState = oldState;
+		ModifyRectangleCmd.newState = newState;
 	}
 
 	@Override

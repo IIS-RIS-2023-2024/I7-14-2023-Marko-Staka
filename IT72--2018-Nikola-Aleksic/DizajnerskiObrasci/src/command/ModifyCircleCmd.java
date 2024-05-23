@@ -9,8 +9,8 @@ public class ModifyCircleCmd implements Command{
 	private static Circle original = new Circle();
 
 	public ModifyCircleCmd(Circle oldState, Circle newState) {
-		this.oldState = oldState;
-		this.newState = newState;
+		ModifyCircleCmd.oldState = oldState;
+		ModifyCircleCmd.newState = newState;
 	}
 
 	@Override

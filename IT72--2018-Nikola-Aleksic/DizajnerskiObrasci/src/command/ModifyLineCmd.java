@@ -9,8 +9,8 @@ public class ModifyLineCmd implements Command{
 	private static Line original = new Line();
 
 	public ModifyLineCmd(Line oldState, Line newState) {
-		this.oldState = oldState;
-		this.newState = newState;
+		ModifyLineCmd.oldState = oldState;
+		ModifyLineCmd.newState = newState;
 	}
 
 	@Override

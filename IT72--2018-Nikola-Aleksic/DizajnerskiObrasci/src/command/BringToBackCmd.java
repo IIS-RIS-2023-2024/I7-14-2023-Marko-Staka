@@ -12,9 +12,9 @@ public class BringToBackCmd implements Command {
 	private static int position;
 
 	public BringToBackCmd(DrawingModel model, Shape shape, int position) {
-		this.model = model;
-		this.shape = shape;
-		this.position = position;
+		BringToBackCmd.model = model;
+		BringToBackCmd.shape = shape;
+		BringToBackCmd.position = position;
 	}
 
 	@Override

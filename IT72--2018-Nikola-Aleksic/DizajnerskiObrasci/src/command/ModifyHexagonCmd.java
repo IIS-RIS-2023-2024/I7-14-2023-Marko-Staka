@@ -9,8 +9,8 @@ public class ModifyHexagonCmd implements Command{
 	private static HexagonAdapter original = new HexagonAdapter();
 	
 	public ModifyHexagonCmd(HexagonAdapter oldState, HexagonAdapter newState) {
-		this.oldState = oldState;
-		this.newState = newState;
+		ModifyHexagonCmd.oldState = oldState;
+		ModifyHexagonCmd.newState = newState;
 	}
 	
 	@Override

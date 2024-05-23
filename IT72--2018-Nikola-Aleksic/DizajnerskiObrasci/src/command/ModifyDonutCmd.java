@@ -9,8 +9,8 @@ public class ModifyDonutCmd implements Command{
 	private static Donut original = new Donut();
 
 	public ModifyDonutCmd(Donut oldState, Donut newState) {
-		this.oldState = oldState;
-		this.newState = newState;
+		ModifyDonutCmd.oldState = oldState;
+		ModifyDonutCmd.newState = newState;
 	}
 
 	@Override
