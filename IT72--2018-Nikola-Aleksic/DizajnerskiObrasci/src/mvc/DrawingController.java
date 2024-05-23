@@ -121,6 +121,38 @@ public class DrawingController {
 		changeButtonsAvailability();
 	}
 	
+	public void toBack() {
+		Shape shape = selectedShapeList.get(0);
+		int position = model.getShapes().indexOf(shape);
+		
+		command = new ToBackCmd(model, shape, position);
+		commandExecute();
+	}
+	
+	public void toFront() {
+		Shape shape = selectedShapeList.get(0);
+		int position = model.getShapes().indexOf(shape);
+		
+		command = new ToFrontCmd(model, shape, position);
+		commandExecute();
+		}
+	
+	public void bringToBack() {
+		Shape shape = selectedShapeList.get(0);
+		int position = model.getShapes().indexOf(shape);
+		
+		command = new BringToBackCmd(model, shape, position);
+		commandExecute();
+	}
+	
+	public void bringToFront() {
+		Shape shape = selectedShapeList.get(0);
+		int position = model.getShapes().indexOf(shape);
+		
+		command = new BringToFrontCmd(model, shape, position);
+		commandExecute();
+	}
+	
 	public void textToList(JTextArea txaArea) {
 		String str = txaArea.getText().toString();
 		String[] strSplit = str.split(System.lineSeparator());
@@ -210,40 +242,7 @@ public class DrawingController {
 	}
 	
 	public void readLogLine(String line) {
-		System.out.println("eeeee");
 		readLogLineService.readLogLine(line);
-	}
-	
-	public void toBack() {
-		Shape shape = selectedShapeList.get(0);
-		int position = model.getShapes().indexOf(shape);
-		
-		command = new ToBackCmd(model, shape, position);
-		commandExecute();
-	}
-	
-	public void toFront() {
-		Shape shape = selectedShapeList.get(0);
-		int position = model.getShapes().indexOf(shape);
-		
-		command = new ToFrontCmd(model, shape, position);
-		commandExecute();
-		}
-	
-	public void bringToBack() {
-		Shape shape = selectedShapeList.get(0);
-		int position = model.getShapes().indexOf(shape);
-		
-		command = new BringToBackCmd(model, shape, position);
-		commandExecute();
-	}
-	
-	public void bringToFront() {
-		Shape shape = selectedShapeList.get(0);
-		int position = model.getShapes().indexOf(shape);
-		
-		command = new BringToFrontCmd(model, shape, position);
-		commandExecute();
 	}
 	
 	public void buttonSelectionClick(MouseEvent e) {

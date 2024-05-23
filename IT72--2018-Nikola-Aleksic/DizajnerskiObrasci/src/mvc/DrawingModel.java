@@ -16,12 +16,12 @@ public class DrawingModel {
 		return shapes;
 	}
 
-	public void add(Shape s) {
-		shapes.add(s);
+	public void add(Shape shape) {
+		shapes.add(shape);
 	}
 
-	public void remove(Shape s) {
-		shapes.remove(s);
+	public void remove(Shape shape) {
+		shapes.remove(shape);
 	}
 
 	public Shape getOneShape(int index) {

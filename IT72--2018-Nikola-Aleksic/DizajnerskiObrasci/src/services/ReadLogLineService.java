@@ -774,37 +774,21 @@ public class ReadLogLineService {
 		Point p = new Point(x , y);
 		HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
 		
-		for (Shape s : model.getShapes()) {
-			if (s.toString().equals(h.toString())) {
-				int position = model.getShapes().indexOf(s);
-				if (commandLog.equals("Move to back")) {
-					command = new ToBackCmd(model, (HexagonAdapter) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Move to front")){
-					command = new ToFrontCmd(model, (HexagonAdapter) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to back")){
-					command = new BringToBackCmd(model, (HexagonAdapter) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to front")){
-					command = new BringToFrontCmd(model, (HexagonAdapter) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
+		for (Shape shape : model.getShapes()) {
+			if (shape.toString().equals(h.toString())) {
+				int position = model.getShapes().indexOf(shape);
+				if (commandLog.equals("Move to back")) 
+					command = new ToBackCmd(model, shape, position);
+				else if (commandLog.equals("Move to front"))
+					command = new ToFrontCmd(model, shape, position);
+				else if (commandLog.equals("Bring to back"))
+					command = new BringToBackCmd(model, shape, position);
+				else if (commandLog.equals("Bring to front"))
+					command = new BringToFrontCmd(model, shape, position);
+				command.execute();
+				frame.getTextArea().append(command.toString());
+				controller.getUndoStack().push(command);
+				controller.getRedoStack().clear();
 				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;

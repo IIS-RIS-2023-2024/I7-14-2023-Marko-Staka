@@ -125,7 +125,6 @@ public class HexagonAdapter extends SurfaceShape implements Moveable{
 	public void setHexagonInnerColor(Color innerColor) {
 		this.hexagon.setAreaColor(innerColor);
 	}
-
 	
 	public HexagonAdapter clone(HexagonAdapter hexagon) {		
 		hexagon.setHexagonCenter(this.getHexagonCenter());
@@ -135,7 +134,6 @@ public class HexagonAdapter extends SurfaceShape implements Moveable{
 
 		return hexagon;
 	}
-
 	
 	@Override
 	public String toString() {
