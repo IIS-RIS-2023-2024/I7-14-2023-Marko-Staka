@@ -46,7 +46,7 @@ public class UnselectTest {
 		selectedShapeCmd.execute();
 		selectedShapeCmd2.execute();
 		
-		controller.UnselectShapes();
+		controller.unselectShapes();
 		assertSame(controller.getSelectedShapeList().size(), 0);
     }
 }

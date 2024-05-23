@@ -1,6 +1,5 @@
 package mvc;
 
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +10,6 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JFileChooser;
@@ -19,12 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import command.ModifyCircleCmd;
-import command.ModifyDonutCmd;
-import command.ModifyHexagonCmd;
-import command.ModifyLineCmd;
-import command.ModifyPointCmd;
-import command.ModifyRectangleCmd;
 import command.AddShapeCmd;
 import command.BringToBackCmd;
 import command.BringToFrontCmd;
@@ -35,40 +27,20 @@ import command.ToBackCmd;
 import command.ToFrontCmd;
 import command.Command;
 
-import dialogues.DlgCircle;
-import dialogues.DlgDonut;
-import dialogues.DlgLine;
-import dialogues.DlgPoint;
-import dialogues.DlgRectangle;
-import dialogues.DlgHexagon;
-import geometry.Circle;
-import geometry.Donut;
-import geometry.Line;
-import geometry.Point;
-import geometry.Rectangle;
 import geometry.Shape;
-import observer.Observer;
-import observer.ObserverChange;
+import services.ButtonsCheckService;
+import services.MakingShapeService;
 import services.ModificationService;
 import services.ReadLogLineService;
 import strategy.SaveDrawing;
 import strategy.SaveLog;
 import strategy.SaveManager;
-import adapter.HexagonAdapter;
 
 public class DrawingController {
 	
 	private DrawingModel model;
 	private DrawingFrame frame;
-	
-	DlgPoint dialogPoint;
-	DlgLine dialogLine;
-	DlgRectangle dialogRectangle;
-	DlgCircle dialogCircle;
-	DlgDonut dialogDonut;
-	DlgHexagon dialogHexagon;
 
-	private Point startPoint;
 	private Shape selectedShape;
 	
 	public ArrayList<Shape> selectedShapeList = new ArrayList<Shape>();
@@ -79,21 +51,20 @@ public class DrawingController {
 	
 	public Command command;
 	
-	private Observer observer = new Observer();
-	private ObserverChange observerModify;
-	
 	private FileReader fileReader;
 	private BufferedReader bufferReader;
 	private ReadLogLineService readLogLineService;
 	private ModificationService modificationService;
+	private MakingShapeService makingShapeService;
+	private ButtonsCheckService buttonsCheckService;
 	
 	public DrawingController(DrawingModel model, DrawingFrame frame) {
 		this.model = model;
 		this.frame = frame;
-		observerModify = new ObserverChange(frame);
-		observer.addPropertyChangeListener(observerModify);
 		readLogLineService = new ReadLogLineService(this.model, this.frame, this);
-		modificationService = new ModificationService(this.model, this.frame, this);
+		modificationService = new ModificationService(this);
+		makingShapeService = new MakingShapeService(this.frame);
+		buttonsCheckService = new ButtonsCheckService(this.frame, this);
 	}
 	
 	
@@ -102,119 +73,20 @@ public class DrawingController {
 			buttonSelectionClick(e);
 		else 
 			drawShape(e);
-		
-		disableButtons();
-		frame.repaint();
 	}
 	
 	public void drawShape(MouseEvent e) {
-		Shape newShape = makeShape(e);
+		Shape newShape = makingShapeService.makeShape(e);
 		if(newShape != null) {
 			command = new AddShapeCmd(model, newShape);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
-			redoStack.clear();
+			commandExecute();
 		}
 	}
-	
-	public Shape makeShape(MouseEvent e) {
-		if (frame.gettglPoint().isSelected()) {
-			return makePoint(e);
-		} else if (frame.gettglLine().isSelected()) {
-			return makeLine(e);
-		} else if (frame.gettglRectangle().isSelected()) {
-			return makeRectangle(e);
-		} else if (frame.gettglCircle().isSelected()) {
-			return makeCircle(e);
-		} else if (frame.gettglDonut().isSelected()) {
-			return makeDonut(e);
-		} else if (frame.gettglHexagon().isSelected()) {
-			return makeHexagon(e);
-		}
-		return null;
-	}	
 
-	public Shape makePoint(MouseEvent e) {
-		return new Point(e.getX(), e.getY(), frame.getBtnColor().getBackground());
-	}
-	
-	public Shape makeLine(MouseEvent e) {
-		if (startPoint == null) {
-            startPoint = new Point(e.getX(), e.getY());
-            return null;
-        } else {
-            Shape newLine = new Line(startPoint, new Point(e.getX(), e.getY()), frame.getBtnColor().getBackground());
-            startPoint = null; 
-            return newLine;
-        }
-	}
-	
-	public Shape makeRectangle(MouseEvent e) {
-	    if (dialogRectangle == null) 
-	    	dialogRectangle = new DlgRectangle();
-	    dialogRectangle.setModal(true);
-	    dialogRectangle.setRectangle(new Rectangle(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-	    dialogRectangle.setVisible(true);
-		try {
-			return dialogRectangle.getRectangle();
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		return null;
-	}
-	
-	public Shape makeCircle(MouseEvent e) {
-	    if (dialogCircle == null)
-	    	dialogCircle = new DlgCircle();
-		dialogCircle.setModal(true);
-		dialogCircle.setCircle(new Circle(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dialogCircle.setVisible(true);
-		try {
-			return dialogCircle.getCircle();
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		return null;
-	}
-	
-	public Shape makeDonut(MouseEvent e) {
-	    if (dialogDonut == null)
-	    	dialogDonut = new DlgDonut();
-		dialogDonut.setModal(true);
-		dialogDonut.setDonut(new Donut(new Point(e.getX(), e.getY()), -1, -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dialogDonut.setVisible(true);
-		try {
-			return dialogDonut.getDonut();
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		return null;
-	}
-	
-	public Shape makeHexagon(MouseEvent e) {
-	    if (dialogHexagon == null)
-	    	dialogHexagon = new DlgHexagon();
-		dialogHexagon.setModal(true);
-		dialogHexagon.setHexagon(new HexagonAdapter(new Point(e.getX(), e.getY()), -1, frame.getBtnColor().getBackground(), frame.getBtnInnerColor().getBackground()));
-		dialogHexagon.setVisible(true);
-		try {
-			return dialogHexagon.getHexagon();
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(frame, "Wrong data type", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		return null;
-	}
-	
 	public void modify() {
 		Shape shapeForModify = selectedShapeList.get(0);
 		command = modificationService.modify(shapeForModify);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		undoStack.push(command);
-		redoStack.clear();
-		disableButtons();
-		frame.repaint();
+		commandExecute();
 	}
 
 	public void delete() {
@@ -224,14 +96,9 @@ public class DrawingController {
 			temp = selectedShapeList.get(0);
 			position = model.getShapes().indexOf(temp);
 			command = new RemoveShapeCmd(model, temp, position);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
+			commandExecute();
 			selectedShapeList.remove(temp);
 		}
-		redoStack.clear();
-		disableButtons();
-		frame.repaint();
 	}
 	
 	public void undo() {
@@ -241,7 +108,7 @@ public class DrawingController {
 		frame.repaint();
 		undoStack.pop();
 		redoStack.push(command);
-		disableButtons();
+		changeButtonsAvailability();
 	}
 	
 	public void redo() {
@@ -251,7 +118,7 @@ public class DrawingController {
 		frame.repaint();
 		redoStack.pop();
 		undoStack.push(command);
-		disableButtons();
+		changeButtonsAvailability();
 	}
 	
 	public void textToList(JTextArea txaArea) {
@@ -287,7 +154,7 @@ public class DrawingController {
 				
 				redoStack.clear();
 				undoStack.clear();
-				disableButtons();
+				changeButtonsAvailability();
 
 				fileReader = new FileReader(file);
 				bufferReader = new BufferedReader(fileReader);
@@ -301,6 +168,7 @@ public class DrawingController {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void loadDrawing() {
 		try {
 			JFileChooser fileChooser = new JFileChooser();
@@ -316,7 +184,7 @@ public class DrawingController {
 				
 				redoStack.clear();
 				undoStack.clear();
-				disableButtons();
+				changeButtonsAvailability();
 				
 				frame.getView().repaint();
 			
@@ -342,6 +210,7 @@ public class DrawingController {
 	}
 	
 	public void readLogLine(String line) {
+		System.out.println("eeeee");
 		readLogLineService.readLogLine(line);
 	}
 	
@@ -350,13 +219,7 @@ public class DrawingController {
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new ToBackCmd(model, shape, position);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		undoStack.push(command);
-		redoStack.clear();
-		
-		disableButtons();
-		frame.getView().repaint();
+		commandExecute();
 	}
 	
 	public void toFront() {
@@ -364,13 +227,7 @@ public class DrawingController {
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new ToFrontCmd(model, shape, position);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		undoStack.push(command);
-		redoStack.clear();
-		
-		disableButtons();
-		frame.getView().repaint();
+		commandExecute();
 		}
 	
 	public void bringToBack() {
@@ -378,13 +235,7 @@ public class DrawingController {
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new BringToBackCmd(model, shape, position);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		undoStack.push(command);
-		redoStack.clear();
-		
-		disableButtons();
-		frame.getView().repaint();
+		commandExecute();
 	}
 	
 	public void bringToFront() {
@@ -392,36 +243,7 @@ public class DrawingController {
 		int position = model.getShapes().indexOf(shape);
 		
 		command = new BringToFrontCmd(model, shape, position);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		undoStack.push(command);
-		redoStack.clear();
-		
-		disableButtons();
-		frame.getView().repaint();
-	}
-	
-	public void disableButtons() {
-		if (undoStack.isEmpty()) 
-			frame.getBtnUndo().setEnabled(false);
-		else 
-			frame.getBtnUndo().setEnabled(true);
-
-		if (redoStack.isEmpty())
-			frame.getBtnRedo().setEnabled(false);
-		else 
-			frame.getBtnRedo().setEnabled(true);
-		
-		if (!selectedShapeList.isEmpty()) {
-			if (selectedShapeList.size() == 1)
-				observer.setBtnModify(true);
-			else 
-				observer.setBtnModify(false);
-			observer.setBtnDelete(true);
-		} else {
-			observer.setBtnModify(false);
-			observer.setBtnDelete(false);
-		}
+		commandExecute();
 	}
 	
 	public void buttonSelectionClick(MouseEvent e) {
@@ -443,41 +265,36 @@ public class DrawingController {
 			undoStack.push(command);
 			selectedShape = null;
 		} else {
-			UnselectShapes();
+			unselectShapes();
 		}
 		redoStack.clear();	
 	}
 	
-	public void UnselectShapes() {
+	public void unselectShapes() {
 		Shape temp;
 		while(selectedShapeList.size() > 0) {
 			temp = selectedShapeList.get(0);
 			command = new UnselectShapeCmd(this, temp);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
-			selectedShapeList.remove(temp);
+			commandExecute();
 		}
+	}
+	
+	public void commandExecute() {
+		command.execute();
+		frame.getTextArea().append(command.toString());
+		undoStack.push(command);
+		redoStack.clear();
+		
+		changeButtonsAvailability();
+		frame.getView().repaint();
+	}
+	
+	public void changeButtonsAvailability() {
+		buttonsCheckService.disableButtons();
 	}
 
 	public ArrayList<Shape> getSelectedShapeList() {
 		return selectedShapeList;
-	}
-	
-	public void setDialogRectangle(DlgRectangle dialogRectangle) {
-		this.dialogRectangle = dialogRectangle;
-	}
-
-	public void setDialogCircle(DlgCircle dialogCircle) {
-		this.dialogCircle = dialogCircle;
-	}
-
-	public void setDialogDonut(DlgDonut dialogDonut) {
-		this.dialogDonut = dialogDonut;
-	}
-
-	public void setDialogHexagon(DlgHexagon dialogHexagon) {
-		this.dialogHexagon = dialogHexagon;
 	}
 
 	public Stack<Command> getUndoStack() {
@@ -491,7 +308,10 @@ public class DrawingController {
 	public ModificationService getModificationService() {
 		return modificationService;
 	}
-	
+
+	public MakingShapeService getMakingShapeService() {
+		return makingShapeService;
+	}
 	
 
 }

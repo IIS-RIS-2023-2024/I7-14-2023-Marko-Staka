@@ -79,7 +79,7 @@ public class MouseEventTest {
     	 frame.gettglRectangle().setSelected(true);
 
     	 MouseEvent mockEvent = mock(MouseEvent.class);
-    	 controller.setDialogRectangle(mockDialog);
+    	 controller.getMakingShapeService().setDialogRectangle(mockDialog);
 
     	 int listSize = model.getShapes().size();
     	 controller.drawShape(mockEvent);
@@ -97,7 +97,7 @@ public class MouseEventTest {
    	 	frame.gettglCircle().setSelected(true);
 
    	 	MouseEvent mockEvent = mock(MouseEvent.class);
-   	 	controller.setDialogCircle(mockDialog);
+   	 	controller.getMakingShapeService().setDialogCircle(mockDialog);
 
    	 	int listSize = model.getShapes().size();
    	 	controller.drawShape(mockEvent);
@@ -115,7 +115,7 @@ public class MouseEventTest {
    	 	frame.gettglDonut().setSelected(true);
 
    	 	MouseEvent mockEvent = mock(MouseEvent.class);
-   	 	controller.setDialogDonut(mockDialog);
+   	 	controller.getMakingShapeService().setDialogDonut(mockDialog);
 
    	 	int listSize = model.getShapes().size();
    	 	controller.drawShape(mockEvent);
@@ -134,8 +134,8 @@ public class MouseEventTest {
    	 	frame.gettglHexagon().setSelected(true);
 
    	 	MouseEvent mockEvent = mock(MouseEvent.class);
-   	 	controller.setDialogHexagon(mockDialog);
-   	 	HexagonAdapter hexagon = (HexagonAdapter) controller.makeHexagon(mockEvent);
+   	 	controller.getMakingShapeService().setDialogHexagon(mockDialog);
+   	 	HexagonAdapter hexagon = (HexagonAdapter) controller.getMakingShapeService().makeHexagon(mockEvent);
    	   
    	 	assertEquals(hexagon.getHexagonCenter().getX(), 10);
    	 	assertEquals(hexagon.getHexagonCenter().getY(), 10);

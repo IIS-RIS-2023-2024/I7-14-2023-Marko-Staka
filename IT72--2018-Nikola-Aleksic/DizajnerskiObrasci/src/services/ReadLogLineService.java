@@ -2,7 +2,6 @@ package services;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import adapter.HexagonAdapter;
 import command.AddShapeCmd;
@@ -129,11 +128,10 @@ public class ReadLogLineService {
 			frame.repaint();
 			controller.getUndoStack().pop();
 			controller.getRedoStack().push(command);
-			controller.disableButtons();
 		} else if (lineElements[0].equals("Redo")) {
 			controller.redo();
 		}
-		controller.disableButtons();
+		controller.changeButtonsAvailability();
 		frame.getView().repaint();
 		
 	}
@@ -231,7 +229,7 @@ public class ReadLogLineService {
 					frame.getTextArea().append(command.toString());
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
-					controller.disableButtons();
+					controller.changeButtonsAvailability();
 					frame.repaint();
 					break;
 				}
@@ -249,7 +247,7 @@ public class ReadLogLineService {
 					frame.getTextArea().append(command.toString());
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
-					controller.disableButtons();
+					controller.changeButtonsAvailability();
 					frame.repaint();
 					break;
 				}
@@ -269,7 +267,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				controller.getRedoStack().clear();
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -293,7 +291,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				controller.getRedoStack().clear();
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -320,7 +318,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				controller.getRedoStack().clear();
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -345,7 +343,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				controller.getRedoStack().clear();
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -370,7 +368,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				controller.getRedoStack().clear();
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -394,7 +392,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				controller.getRedoStack().clear();
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -415,7 +413,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				selectedShapeList.remove(temp);
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -438,7 +436,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				selectedShapeList.remove(temp);
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -463,7 +461,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				selectedShapeList.remove(temp);
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -487,7 +485,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				selectedShapeList.remove(temp);
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -512,7 +510,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				selectedShapeList.remove(temp);
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -535,7 +533,7 @@ public class ReadLogLineService {
 				frame.getTextArea().append(command.toString());
 				controller.getUndoStack().push(command);
 				selectedShapeList.remove(temp);
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -577,7 +575,7 @@ public class ReadLogLineService {
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
 				}
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -623,7 +621,7 @@ public class ReadLogLineService {
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
 				}
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -669,7 +667,7 @@ public class ReadLogLineService {
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
 				}
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -715,7 +713,7 @@ public class ReadLogLineService {
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
 				}
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -762,7 +760,7 @@ public class ReadLogLineService {
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
 				}
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}
@@ -807,7 +805,7 @@ public class ReadLogLineService {
 					controller.getUndoStack().push(command);
 					controller.getRedoStack().clear();
 				}
-				controller.disableButtons();
+				controller.changeButtonsAvailability();
 				frame.repaint();
 				break;
 			}

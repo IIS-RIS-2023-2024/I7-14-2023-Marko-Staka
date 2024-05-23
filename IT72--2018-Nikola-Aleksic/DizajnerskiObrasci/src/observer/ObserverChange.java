@@ -6,6 +6,7 @@ import java.beans.PropertyChangeListener;
 import mvc.DrawingFrame;
 
 public class ObserverChange implements PropertyChangeListener {
+	
 	private DrawingFrame frame;
 
 	public ObserverChange(DrawingFrame frame) {
