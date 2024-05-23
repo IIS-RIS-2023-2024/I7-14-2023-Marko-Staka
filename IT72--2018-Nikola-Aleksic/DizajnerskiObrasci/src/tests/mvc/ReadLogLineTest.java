@@ -22,7 +22,7 @@ import mvc.DrawingFrame;
 import mvc.DrawingModel;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ReadLineTest {
+public class ReadLogLineTest {
 	private static DrawingModel model;
 	private static DrawingFrame frame;
 	private static DrawingController controller;
@@ -38,7 +38,7 @@ public class ReadLineTest {
 	@Order(1)
 	public void testReadAddPoint() {
         String line = "Add: Point: [x= 482, y= 81, color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Point);
@@ -51,7 +51,7 @@ public class ReadLineTest {
 	@Order(2)
 	public void testReadAddLine() {
         String line = "Add: Line: [startPoint= 536, 58, endPoint= 258, 210, color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Line);
@@ -66,7 +66,7 @@ public class ReadLineTest {
 	@Order(3)
 	public void testReadAddCircle() {
         String line = "Add: Circle: [center= 651, 190, radius= 55, color= -1, border color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Circle);
@@ -80,7 +80,7 @@ public class ReadLineTest {
 	@Order(4)
 	public void testReadAddDonut() {
         String line = "Add: Donut: [center= 357, 265, radius= 55, innerRadius= 44, color= -1, border color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Donut);
@@ -95,7 +95,7 @@ public class ReadLineTest {
 	@Order(5)
 	public void testReadAddRectangle() {
         String line = "Add: Rectangle: [upperLeftPoint= 506, 329, height=55, width=120, color= -1, border color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Rectangle);
@@ -110,7 +110,7 @@ public class ReadLineTest {
 	@Order(6)
 	public void testReadAddHexagon() {
         String line = "Add: Hexagon: [center= 102, 360, radius= 55, color= -1, border color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof HexagonAdapter);
@@ -124,9 +124,9 @@ public class ReadLineTest {
 	@Order(7)
 	public void testSelect() {
         String addPoint = "Add: Point: [x= 50, y= 50, color= -16777216]";
-		controller.readLine(addPoint);
+		controller.readLogLine(addPoint);
         String line = "Select: Point: [x= 50, y= 50, color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 		Point selectedPoint = (Point)model.getShapes().get(0);
 	    assertTrue(selectedPoint.isSelected());
@@ -136,11 +136,11 @@ public class ReadLineTest {
 	@Order(8)
 	public void testUnselect() {
         String addPointLine = "Add: Point: [x= 50, y= 50, color= -16777216]";
-		controller.readLine(addPointLine);
+		controller.readLogLine(addPointLine);
         String selectedPointLine = "Select: Point: [x= 50, y= 50, color= -16777216]";
-		controller.readLine(selectedPointLine);	    
+		controller.readLogLine(selectedPointLine);	    
         String line = "Unselect: Point: [x= 50, y= 50, color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 		Point selectedPoint = (Point)model.getShapes().get(0);
 	    assertFalse(selectedPoint.isSelected());
@@ -150,9 +150,9 @@ public class ReadLineTest {
 	@Order(9)
 	public void testModifyPoint() {
 		String addPoint = "Add: Point: [x= 288, y= 73, color= -16777216]";
-		controller.readLine(addPoint);
+		controller.readLogLine(addPoint);
         String line = "Modify: Point: [x= 288, y= 73, color= -16777216] to Point: [x= 100, y= 100, color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Point);
@@ -165,9 +165,9 @@ public class ReadLineTest {
 	@Order(10)
 	public void testModifyLine() {
         String addLine = "Add: Line: [startPoint= 536, 58, endPoint= 258, 210, color= -16777216]";
-		controller.readLine(addLine);
+		controller.readLogLine(addLine);
         String line = "Modify: Line: [startPoint= 536, 58, endPoint= 258, 210, color= -16777216] to Line: [startPoint= 100, 100, endPoint= 200, 200, color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Line);
@@ -182,9 +182,9 @@ public class ReadLineTest {
 	@Order(11)
 	public void testModifyCircle() {
         String addCircle = "Add: Circle: [center= 651, 190, radius= 55, color= -1, border color= -16777216]";
-		controller.readLine(addCircle);
+		controller.readLogLine(addCircle);
         String line = "Modify: Circle: [center= 651, 190, radius= 55, color= -1, border color= -16777216] to Circle: [center= 100, 100, radius= 100, color= -1, border color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Circle);
@@ -198,9 +198,9 @@ public class ReadLineTest {
 	@Order(12)
 	public void testModifyRectangle() {
         String addRectangle = "Add: Rectangle: [upperLeftPoint= 506, 329, height=55, width=120, border color= -16777216, color= -1]";
-		controller.readLine(addRectangle);
+		controller.readLogLine(addRectangle);
         String line = "Modify: Rectangle: [upperLeftPoint= 506, 329, height=55, width=120, border color= -16777216, color= -1] to Rectangle: [upperLeftPoint= 100, 100, height=100, width=100, border color= -16777216, color= -1]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Rectangle);
@@ -215,9 +215,9 @@ public class ReadLineTest {
 	@Order(13)
 	public void testModifyDonut() {        
 		String addDonut = "Add: Donut: [center= 357, 265, radius= 55, innerRadius= 44, color= -1, border color= -16777216]";
-		controller.readLine(addDonut);
+		controller.readLogLine(addDonut);
         String line = "Modify: Donut: [center= 357, 265, radius= 55, innerRadius= 44, color= -1, border color= -16777216] to Donut: [center= 100, 100, radius= 100, innerRadius= 50, color= -1, border color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof Donut);
@@ -232,9 +232,9 @@ public class ReadLineTest {
 	@Order(14)
 	public void testModifyHexagon() {
         String addHexagon = "Add: Hexagon: [center= 102, 360, radius= 55, color= -1, border color= -16777216]";
-		controller.readLine(addHexagon);
+		controller.readLogLine(addHexagon);
         String line = "Modify: Hexagon: [center= 102, 360, radius= 55, color= -1, border color= -16777216] to Hexagon: [center= 100, 100, radius= 100, color= -1, border color= -16777216]";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertTrue(model.getShapes().get(0) instanceof HexagonAdapter);
@@ -248,9 +248,9 @@ public class ReadLineTest {
 	@Order(15)
 	public void testReadRemovePoint() {
         String addPointLine = "Add: Point: [x= 50, y= 50, color= -16777216]";
-		controller.readLine(addPointLine);
+		controller.readLogLine(addPointLine);
         String line = "Delete: Point: [x= 50, y= 50, color= -16777216], 0";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(0, model.getShapes().size());
 	}
@@ -259,9 +259,9 @@ public class ReadLineTest {
 	@Order(16)
 	public void testReadRemoveLine() {
         String addLineLine = "Add: Line: [startPoint= 536, 58, endPoint= 258, 210, color= -16777216]";
-		controller.readLine(addLineLine);
+		controller.readLogLine(addLineLine);
         String line = "Delete: Line: [startPoint= 536, 58, endPoint= 258, 210, color= -16777216], 0";
-		controller.readLine(line);
+		controller.readLogLine(line);
 
 	    assertEquals(0, model.getShapes().size());
 	}
@@ -270,9 +270,9 @@ public class ReadLineTest {
 	@Order(17)
 	public void testReadRemoveCircle() {
         String addCircleLine = "Add: Circle: [center= 651, 190, radius= 55, color= -1, border color= -16777216]";
-		controller.readLine(addCircleLine);
+		controller.readLogLine(addCircleLine);
         String line = "Delete: Circle: [center= 651, 190, radius= 55, color= -1, border color= -16777216], 0";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		  
 	    assertEquals(0, model.getShapes().size());
 	}
@@ -281,9 +281,9 @@ public class ReadLineTest {
 	@Order(18)
 	public void testReadRemoveDonut() {
         String addDonutLine = "Add: Donut: [center= 357, 265, radius= 55, innerRadius= 44, color= -1, border color= -16777216]";
-		controller.readLine(addDonutLine);       
+		controller.readLogLine(addDonutLine);       
 		String line = "Delete: Donut: [center= 357, 265, radius= 55, innerRadius= 44, color= -1, border color= -16777216], 0";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		
 	    assertEquals(0, model.getShapes().size());
 	}
@@ -292,9 +292,9 @@ public class ReadLineTest {
 	@Order(19)
 	public void testReadRemoveRectangle() {
         String addRectangleLine = "Add: Rectangle: [upperLeftPoint= 506, 329, height=55, width=120, color= -1, border color= -16777216]";
-		controller.readLine(addRectangleLine);
+		controller.readLogLine(addRectangleLine);
         String line = "Delete: Rectangle: [upperLeftPoint= 506, 329, height=55, width=120, color= -1, border color= -16777216], 0";
-		controller.readLine(line);
+		controller.readLogLine(line);
 		
 	    assertEquals(0, model.getShapes().size());
 	}
@@ -303,9 +303,9 @@ public class ReadLineTest {
 	@Order(20)
 	public void testReadRemoveHexagon() {
         String addHexagonLine = "Add: Hexagon: [center= 102, 360, radius= 55, color= -1, border color= -16777216]";
-		controller.readLine(addHexagonLine);
+		controller.readLogLine(addHexagonLine);
         String line = "Delete: Hexagon: [center= 102, 360, radius= 55, color= -1, border color= -16777216], 0";
-		controller.readLine(line);
+		controller.readLogLine(line);
 
 	    assertEquals(0, model.getShapes().size());
 	}
@@ -315,9 +315,9 @@ public class ReadLineTest {
 	@Order(21)
 	public void testReadUndo() {
         String line = "Add: Point: [x= 288, y= 73, color= -16777216]";
-        controller.readLine(line);
+        controller.readLogLine(line);
         String undoLine = "Undo: [ Add: Point: [x= 288, y= 73, color= -16777216] ]";
-        controller.readLine(undoLine);
+        controller.readLogLine(undoLine);
 		  
 	    assertEquals(0, model.getShapes().size());
 	    assertEquals(0, controller.undoStack.size());
@@ -330,11 +330,11 @@ public class ReadLineTest {
 	@Order(22)
 	public void testReadRedo() {
         String line = "Add: Point: [x= 288, y= 73, color= -16777216]";
-        controller.readLine(line);
+        controller.readLogLine(line);
         String undoLine = "Undo: [ Add: Point: [x= 288, y= 73, color= -16777216] ]";
-        controller.readLine(undoLine);
+        controller.readLogLine(undoLine);
         String redoLine = "Redo: [ Add: Point: [x= 1, y= 73, color= -16777216] ]";
-        controller.readLine(redoLine);
+        controller.readLogLine(redoLine);
 		  
 	    assertEquals(1, model.getShapes().size());
 	    assertEquals(1, controller.undoStack.size());
@@ -346,12 +346,12 @@ public class ReadLineTest {
 	@Order(23)
 	public void testMoveToBackPoint() {
         String addedPoint1 = "Add: Point: [x= 10, y= 10, color= -16777216]";
-        controller.readLine(addedPoint1);
+        controller.readLogLine(addedPoint1);
         String addedPoint2 = "Add: Point: [x= 20, y= 20, color= -16777216]";
-        controller.readLine(addedPoint2);
+        controller.readLogLine(addedPoint2);
         
         String line = "Move to back: Point: [x= 20, y= 20, color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Point checkPoint = (Point)model.getOneShape(0);
 		  
@@ -365,12 +365,12 @@ public class ReadLineTest {
 	@Order(24)
 	public void testMoveToFrontPoint() {
         String addedPoint1 = "Add: Point: [x= 10, y= 10, color= -16777216]";
-        controller.readLine(addedPoint1);
+        controller.readLogLine(addedPoint1);
         String addedPoint2 = "Add: Point: [x= 20, y= 20, color= -16777216]";
-        controller.readLine(addedPoint2);
+        controller.readLogLine(addedPoint2);
         
         String line = "Move to front: Point: [x= 10, y= 10, color= -16777216], 1";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Point checkPoint = (Point)model.getOneShape(1);
 		  
@@ -383,12 +383,12 @@ public class ReadLineTest {
 	@Order(25)
 	public void testMoveToBackLine() {
         String addedLine1 = "Add: Line: [startPoint= 10, 10, endPoint= 10, 10, color= -16777216]";
-        controller.readLine(addedLine1);
+        controller.readLogLine(addedLine1);
         String addedLine2 = "Add: Line: [startPoint= 20, 20, endPoint= 20, 20, color= -16777216]";
-        controller.readLine(addedLine2);
+        controller.readLogLine(addedLine2);
         
         String line = "Move to back: Line: [startPoint= 20, 20, endPoint= 20, 20, color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Line checkLine = (Line)model.getOneShape(0);
 		  
@@ -404,12 +404,12 @@ public class ReadLineTest {
 	@Order(26)
 	public void testMoveToFrontLine() {
         String addedLine1 = "Add: Line: [startPoint= 10, 10, endPoint= 10, 10, color= -16777216]";
-        controller.readLine(addedLine1);
+        controller.readLogLine(addedLine1);
         String addedLine2 = "Add: Line: [startPoint= 20, 20, endPoint= 20, 20, color= -16777216]";
-        controller.readLine(addedLine2);
+        controller.readLogLine(addedLine2);
         
         String line = "Move to front: Line: [startPoint= 10, 10, endPoint= 10, 10, color= -16777216], 1";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Line checkLine = (Line)model.getOneShape(1);
 		  
@@ -424,12 +424,12 @@ public class ReadLineTest {
 	@Order(27)
 	public void testMoveToBackCircle() {
         String addedCircle1 = "Add: Circle: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle1);
+        controller.readLogLine(addedCircle1);
         String addedCircle2 = "Add: Circle: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle2);
+        controller.readLogLine(addedCircle2);
         
         String line = "Move to back: Circle: [center= 20, 20, radius= 20, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Circle checkCircle = (Circle)model.getOneShape(0);
 		  
@@ -444,12 +444,12 @@ public class ReadLineTest {
 	@Order(28)
 	public void testMoveToFrontCircle() {
         String addedCircle1 = "Add: Circle: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle1);
+        controller.readLogLine(addedCircle1);
         String addedCircle2 = "Add: Circle: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle2);
+        controller.readLogLine(addedCircle2);
         
         String line = "Move to front: Circle: [center= 10, 10, radius= 10, color= -1, border color= -16777216], 1";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Circle checkCircle = (Circle)model.getOneShape(1);
 		  
@@ -463,12 +463,12 @@ public class ReadLineTest {
 	@Order(29)
 	public void testMoveToBackDonut() {
         String addedCircle1 = "Add: Donut: [center= 10, 10, radius= 10, innerRadius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle1);
+        controller.readLogLine(addedCircle1);
         String addedCircle2 = "Add: Donut: [center= 20, 20, radius= 20, innerRadius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle2);
+        controller.readLogLine(addedCircle2);
         
         String line = "Move to back: Donut: [center= 20, 20, radius= 20, innerRadius= 20, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Donut checkDonut = (Donut)model.getOneShape(0);
 		  
@@ -483,12 +483,12 @@ public class ReadLineTest {
 	@Order(30)
 	public void testMoveToFrontDonut() {
         String addedDonut1 = "Add: Donut: [center= 10, 10, radius= 10, innerRadius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedDonut1);
+        controller.readLogLine(addedDonut1);
         String addedDonut2 = "Add: Donut: [center= 20, 20, radius= 20, innerRadius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedDonut2);
+        controller.readLogLine(addedDonut2);
         
         String line = "Move to front: Donut: [center= 10, 10, radius= 10, innerRadius= 10, color= -1, border color= -16777216], 1";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Donut checkDonut = (Donut)model.getOneShape(1);
 		  
@@ -503,12 +503,12 @@ public class ReadLineTest {
 	@Order(31)
 	public void testMoveToBackRectangle() {
         String addedRectangle1 = "Add: Rectangle: [upperLeftPoint= 10, 10, height=10, width=10, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle1);
+        controller.readLogLine(addedRectangle1);
         String addedRectangle2 = "Add: Rectangle: [upperLeftPoint= 20, 20, height=20, width=20, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle2);
+        controller.readLogLine(addedRectangle2);
         
         String line = "Move to back: Rectangle: [upperLeftPoint= 20, 20, height=20, width=20, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Rectangle checkRectangle = (Rectangle)model.getOneShape(0);
 		  
@@ -523,12 +523,12 @@ public class ReadLineTest {
 	@Order(32)
 	public void testMoveToFrontRectangle() {
         String addedRectangle1 = "Add: Rectangle: [upperLeftPoint= 10, 10, height=10, width=10, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle1);
+        controller.readLogLine(addedRectangle1);
         String addedRectangle2 = "Add: Rectangle: [upperLeftPoint= 20, 20, height=20, width=20, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle2);
+        controller.readLogLine(addedRectangle2);
         
         String line = "Move to front: Rectangle: [upperLeftPoint= 10, 10, height=10, width=10, color= -1, border color= -16777216], 1";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Rectangle checkRectangle = (Rectangle)model.getOneShape(0);
 		  
@@ -543,12 +543,12 @@ public class ReadLineTest {
 	@Order(33)
 	public void testMoveToBackHexagon() {
         String addedRectangle1 = "Add: Hexagon: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle1);
+        controller.readLogLine(addedRectangle1);
         String addedRectangle2 = "Add: Hexagon: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle2);
+        controller.readLogLine(addedRectangle2);
         
         String line = "Move to back: Hexagon: [center= 20, 20, radius= 20, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         HexagonAdapter checkHexagon = (HexagonAdapter)model.getOneShape(0);
 		  
@@ -562,12 +562,12 @@ public class ReadLineTest {
 	@Order(34)
 	public void testMoveToFrontHexagon() {
         String addedHexagon1 = "Add: Hexagon: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon1);
+        controller.readLogLine(addedHexagon1);
         String addedHexagon2 = "Add: Hexagon: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon2);
+        controller.readLogLine(addedHexagon2);
         
         String line = "Move to front: Hexagon: [center= 10, 10, radius= 10, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         HexagonAdapter checkHexagon = (HexagonAdapter)model.getOneShape(1);
 		  
@@ -581,14 +581,14 @@ public class ReadLineTest {
 	@Order(35)
 	public void testBringToBackPoint() {
         String addedPoint1 = "Add: Point: [x= 10, y= 10, color= -16777216]";
-        controller.readLine(addedPoint1);
+        controller.readLogLine(addedPoint1);
         String addedPoint2 = "Add: Point: [x= 20, y= 20, color= -16777216]";
-        controller.readLine(addedPoint2);
+        controller.readLogLine(addedPoint2);
         String addedPoint3 = "Add: Point: [x= 30, y= 30, color= -16777216]";
-        controller.readLine(addedPoint3);
+        controller.readLogLine(addedPoint3);
         
         String line = "Bring to back: Point: [x= 30, y= 30, color= -16777216], 2";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Point checkPoint = (Point)model.getOneShape(0);
 		  
@@ -601,14 +601,14 @@ public class ReadLineTest {
 	@Order(36)
 	public void testBringToFrontPoint() {
         String addedPoint1 = "Add: Point: [x= 10, y= 10, color= -16777216]";
-        controller.readLine(addedPoint1);
+        controller.readLogLine(addedPoint1);
         String addedPoint2 = "Add: Point: [x= 20, y= 20, color= -16777216]";
-        controller.readLine(addedPoint2);
+        controller.readLogLine(addedPoint2);
         String addedPoint3 = "Add: Point: [x= 30, y= 30, color= -16777216]";
-        controller.readLine(addedPoint3);
+        controller.readLogLine(addedPoint3);
         
         String line = "Bring to front: Point: [x= 10, y= 10, color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Point checkPoint = (Point)model.getOneShape(2);
 		  
@@ -621,14 +621,14 @@ public class ReadLineTest {
 	@Order(37)
 	public void testBringToBackLine() {
         String addedLine1 = "Add: Line: [startPoint= 10, 10, endPoint= 10, 10, color= -16777216]";
-        controller.readLine(addedLine1);
+        controller.readLogLine(addedLine1);
         String addedLine2 = "Add: Line: [startPoint= 20, 20, endPoint= 20, 20, color= -16777216]";
-        controller.readLine(addedLine2);
+        controller.readLogLine(addedLine2);
         String addedLine3 = "Add: Line: [startPoint= 30, 30, endPoint= 30, 30, color= -16777216]";
-        controller.readLine(addedLine3);
+        controller.readLogLine(addedLine3);
         
         String line = "Bring to back: Line: [startPoint= 30, 30, endPoint= 30, 30, color= -16777216], 2";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Line checkLine = (Line)model.getOneShape(0);
 		  
@@ -644,14 +644,14 @@ public class ReadLineTest {
 	@Order(38)
 	public void testBringToFrontLine() {
         String addedLine1 = "Add: Line: [startPoint= 10, 10, endPoint= 10, 10, color= -16777216]";
-        controller.readLine(addedLine1);
+        controller.readLogLine(addedLine1);
         String addedLine2 = "Add: Line: [startPoint= 20, 20, endPoint= 20, 20, color= -16777216]";
-        controller.readLine(addedLine2);
+        controller.readLogLine(addedLine2);
         String addedLine3 = "Add: Line: [startPoint= 30, 30, endPoint= 30, 30, color= -16777216]";
-        controller.readLine(addedLine3);
+        controller.readLogLine(addedLine3);
         
         String line = "Bring to front: Line: [startPoint= 10, 10, endPoint= 10, 10, color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Line checkLine = (Line)model.getOneShape(2);
 		  
@@ -666,14 +666,14 @@ public class ReadLineTest {
 	@Order(39)
 	public void testBringToBackCircle() {
         String addedCircle1 = "Add: Circle: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle1);
+        controller.readLogLine(addedCircle1);
         String addedCircle2 = "Add: Circle: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle2);
+        controller.readLogLine(addedCircle2);
         String addedCircle3 = "Add: Circle: [center= 30, 30, radius= 30, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle3);
+        controller.readLogLine(addedCircle3);
         
         String line = "Bring to back: Circle: [center= 30, 30, radius= 30, color= -1, border color= -16777216], 2";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Circle checkCircle = (Circle)model.getOneShape(0);
 		  
@@ -688,14 +688,14 @@ public class ReadLineTest {
 	@Order(40)
 	public void testBringToFrontCircle() {
         String addedCircle1 = "Add: Circle: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle1);
+        controller.readLogLine(addedCircle1);
         String addedCircle2 = "Add: Circle: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle2);
+        controller.readLogLine(addedCircle2);
         String addedCircle3 = "Add: Circle: [center= 30, 30, radius= 30, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle3);
+        controller.readLogLine(addedCircle3);
         
         String line = "Bring to front: Circle: [center= 10, 10, radius= 10, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Circle checkCircle = (Circle)model.getOneShape(2);
 		  
@@ -709,14 +709,14 @@ public class ReadLineTest {
 	@Order(41)
 	public void testBringToBackDonut() {
         String addedCircle1 = "Add: Donut: [center= 10, 10, radius= 10, innerRadius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle1);
+        controller.readLogLine(addedCircle1);
         String addedCircle2 = "Add: Donut: [center= 20, 20, radius= 20, innerRadius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle2);
+        controller.readLogLine(addedCircle2);
         String addedCircle3 = "Add: Donut: [center= 30, 30, radius= 30, innerRadius= 30, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle3);
+        controller.readLogLine(addedCircle3);
         
         String line = "Bring to back: Donut: [center= 30, 30, radius= 30, innerRadius= 30, color= -1, border color= -16777216], 2";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Donut checkDonut = (Donut)model.getOneShape(0);
 		  
@@ -731,14 +731,14 @@ public class ReadLineTest {
 	@Order(42)
 	public void testBringToFrontDonut() {
         String addedCircle1 = "Add: Donut: [center= 10, 10, radius= 10, innerRadius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle1);
+        controller.readLogLine(addedCircle1);
         String addedCircle2 = "Add: Donut: [center= 20, 20, radius= 20, innerRadius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle2);
+        controller.readLogLine(addedCircle2);
         String addedCircle3 = "Add: Donut: [center= 30, 30, radius= 30, innerRadius= 30, color= -1, border color= -16777216]";
-        controller.readLine(addedCircle3);
+        controller.readLogLine(addedCircle3);
         
         String line = "Bring to front: Donut: [center= 10, 10, radius= 10, innerRadius= 10, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Donut checkDonut = (Donut)model.getOneShape(2);
 		  
@@ -753,14 +753,14 @@ public class ReadLineTest {
 	@Order(43)
 	public void testBringToBackRectangle() {
         String addedRectangle1 = "Add: Rectangle: [upperLeftPoint= 10, 10, height=10, width=10, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle1);
+        controller.readLogLine(addedRectangle1);
         String addedRectangle2 = "Add: Rectangle: [upperLeftPoint= 20, 20, height=20, width=20, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle2);
+        controller.readLogLine(addedRectangle2);
         String addedRectangle3 = "Add: Rectangle: [upperLeftPoint= 30, 30, height=30, width=30, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle3);
+        controller.readLogLine(addedRectangle3);
         
         String line = "Bring to back: Rectangle: [upperLeftPoint= 30, 30, height=30, width=30, color= -1, border color= -16777216], 2";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Rectangle checkRectangle = (Rectangle)model.getOneShape(0);
 		  
@@ -775,14 +775,14 @@ public class ReadLineTest {
 	@Order(44)
 	public void testBringToFrontRectangle() {
         String addedRectangle1 = "Add: Rectangle: [upperLeftPoint= 10, 10, height=10, width=10, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle1);
+        controller.readLogLine(addedRectangle1);
         String addedRectangle2 = "Add: Rectangle: [upperLeftPoint= 20, 20, height=20, width=20, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle2);
+        controller.readLogLine(addedRectangle2);
         String addedRectangle3 = "Add: Rectangle: [upperLeftPoint= 30, 30, height=30, width=30, color= -1, border color= -16777216]";
-        controller.readLine(addedRectangle3);
+        controller.readLogLine(addedRectangle3);
         
         String line = "Bring to front: Rectangle: [upperLeftPoint= 10, 10, height=10, width=10, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         Rectangle checkRectangle = (Rectangle)model.getOneShape(2);
 		  
@@ -797,14 +797,14 @@ public class ReadLineTest {
 	@Order(45)
 	public void testBringToBackHexagon() {
         String addedHexagon1 = "Add: Hexagon: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon1);
+        controller.readLogLine(addedHexagon1);
         String addedHexagon2 = "Add: Hexagon: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon2);
+        controller.readLogLine(addedHexagon2);
         String addedHexagon3 = "Add: Hexagon: [center= 30, 30, radius= 30, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon3);
+        controller.readLogLine(addedHexagon3);
         
         String line = "Bring to back: Hexagon: [center= 30, 30, radius= 30, color= -1, border color= -16777216], 2";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         HexagonAdapter checkRectangle = (HexagonAdapter)model.getOneShape(0);
 		  
@@ -818,14 +818,14 @@ public class ReadLineTest {
 	@Order(46)
 	public void testBringToFrontHexagon() {
         String addedHexagon1 = "Add: Hexagon: [center= 10, 10, radius= 10, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon1);
+        controller.readLogLine(addedHexagon1);
         String addedHexagon2 = "Add: Hexagon: [center= 20, 20, radius= 20, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon2);
+        controller.readLogLine(addedHexagon2);
         String addedHexagon3 = "Add: Hexagon: [center= 30, 30, radius= 30, color= -1, border color= -16777216]";
-        controller.readLine(addedHexagon3);
+        controller.readLogLine(addedHexagon3);
         
         String line = "Bring to front: Hexagon: [center= 10, 10, radius= 10, color= -1, border color= -16777216], 0";
-        controller.readLine(line);
+        controller.readLogLine(line);
         
         HexagonAdapter checkRectangle = (HexagonAdapter)model.getOneShape(2);
 		  
