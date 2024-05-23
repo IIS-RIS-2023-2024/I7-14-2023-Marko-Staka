@@ -31,6 +31,7 @@ import geometry.Rectangle;
 import mvc.DrawingController;
 import mvc.DrawingFrame;
 import mvc.DrawingModel;
+import services.ModificationService;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ModifyTest {
@@ -60,7 +61,7 @@ public class ModifyTest {
    	 	when(mockDialog.isCommited()).thenReturn(true);
    	 	when(mockDialog.getPoint()).thenReturn(new Point(50,50));
 
-   	 	controller.setDialogPoint(mockDialog);
+   	 	controller.getModificationService().setDialogPoint(mockDialog);
     	controller.modify();
 
    	 	Point checkPoint = (Point)model.getOneShape(0);
@@ -85,7 +86,7 @@ public class ModifyTest {
    	 	when(mockDialog.isCommited()).thenReturn(true);
    	 	when(mockDialog.getLine()).thenReturn(new Line(new Point(50,50), new Point(60,60)));
 
-   	 	controller.setDialogLine(mockDialog);
+   	 	controller.getModificationService().setDialogLine(mockDialog);
     	controller.modify();
 
     	Line checkLine = (Line)model.getOneShape(0);
@@ -112,7 +113,7 @@ public class ModifyTest {
    	 	when(mockDialog.isCommited()).thenReturn(true);
    	 	when(mockDialog.getRectangle()).thenReturn(new Rectangle(new Point(50,50), 50, 50));
 
-   	 	controller.setDialogRectangle(mockDialog);
+   	 	controller.getModificationService().setDialogRectangle(mockDialog);
     	controller.modify();
 
    	 	Rectangle checkRectangle = (Rectangle)model.getOneShape(0);
@@ -139,7 +140,7 @@ public class ModifyTest {
      	when(mockDialog.isCommited()).thenReturn(true);
      	when(mockDialog.getCircle()).thenReturn(new Circle(new Point(10,10), 50));
 
-     	controller.setDialogCircle(mockDialog);
+     	controller.getModificationService().setDialogCircle(mockDialog);
       	controller.modify();
 
       	Circle checkCircle = (Circle)model.getOneShape(0);
@@ -165,7 +166,7 @@ public class ModifyTest {
      	when(mockDialog.isCommited()).thenReturn(true);
      	when(mockDialog.getDonut()).thenReturn(new Donut(new Point(10,10), 50, 20));
 
-     	controller.setDialogDonut(mockDialog);
+     	controller.getModificationService().setDialogDonut(mockDialog);
       	controller.modify();
 
       	Donut checkDonut = (Donut)model.getOneShape(0);
@@ -190,7 +191,7 @@ public class ModifyTest {
      	when(mockDialog.isCommited()).thenReturn(true);
      	when(mockDialog.getHexagon()).thenReturn(new HexagonAdapter(new Point(5,5), 50, Color.black, Color.white));
 
-     	controller.setDialogHexagon(mockDialog);
+     	controller.getModificationService().setDialogHexagon(mockDialog);
       	controller.modify();
 
       	HexagonAdapter checkHexagon = (HexagonAdapter)model.getOneShape(0);

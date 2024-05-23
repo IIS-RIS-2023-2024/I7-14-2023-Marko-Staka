@@ -49,6 +49,7 @@ import geometry.Rectangle;
 import geometry.Shape;
 import observer.Observer;
 import observer.ObserverChange;
+import services.ModificationService;
 import services.ReadLogLineService;
 import strategy.SaveDrawing;
 import strategy.SaveLog;
@@ -84,6 +85,7 @@ public class DrawingController {
 	private FileReader fileReader;
 	private BufferedReader bufferReader;
 	private ReadLogLineService readLogLineService;
+	private ModificationService modificationService;
 	
 	public DrawingController(DrawingModel model, DrawingFrame frame) {
 		this.model = model;
@@ -91,6 +93,7 @@ public class DrawingController {
 		observerModify = new ObserverChange(frame);
 		observer.addPropertyChangeListener(observerModify);
 		readLogLineService = new ReadLogLineService(this.model, this.frame, this);
+		modificationService = new ModificationService(this.model, this.frame, this);
 	}
 	
 	
@@ -204,19 +207,8 @@ public class DrawingController {
 	}
 	
 	public void modify() {
-		if (selectedShapeList.get(0) instanceof Point) 
-			modifyPoint();
-		else if (selectedShapeList.get(0) instanceof Line) 
-			modifyLine();
-		else if (selectedShapeList.get(0) instanceof Donut) 
-			modifyDonut();
-		else if (selectedShapeList.get(0) instanceof Circle) 
-			modifyCircle();
-		else if (selectedShapeList.get(0) instanceof Rectangle) 
-			modifyRectangle();
-		else if (selectedShapeList.get(0) instanceof HexagonAdapter) 
-			modifyHexagon();	
-
+		Shape shapeForModify = selectedShapeList.get(0);
+		command = modificationService.modify(shapeForModify);
 		command.execute();
 		frame.getTextArea().append(command.toString());
 		undoStack.push(command);
@@ -225,90 +217,21 @@ public class DrawingController {
 		frame.repaint();
 	}
 
-	public void modifyPoint() {
-		Point oldPoint = (Point) selectedShapeList.get(0);
-	    if (dialogPoint == null) 
-	    	dialogPoint = new DlgPoint();
-	    dialogPoint.setModal(true);
-	    dialogPoint.setPoint(oldPoint);
-	    dialogPoint.setVisible(true);
-		if (dialogPoint.isCommited()) 
-			command = new ModifyPointCmd(oldPoint, dialogPoint.getPoint());
-	}
-	
-	public void modifyLine() {
-		Line oldLine = (Line) selectedShapeList.get(0);
-	    if (dialogLine == null) 
-	    	dialogLine = new DlgLine();
-	    dialogLine.setModal(true);
-	    dialogLine.setLine(oldLine);
-	    dialogLine.setVisible(true);
-		if (dialogLine.isCommited()) 
-			command = new ModifyLineCmd(oldLine, dialogLine.getLine());
-	}
-	
-	public void modifyRectangle() {
-		Rectangle oldRectangle = (Rectangle) selectedShapeList.get(0);
-	    if (dialogRectangle == null) 
-	    	dialogRectangle = new DlgRectangle();
-	    dialogRectangle.setModal(true);
-	    dialogRectangle.setRectangle(oldRectangle);
-	    dialogRectangle.setVisible(true);
-		if (dialogRectangle.isCommited())
-			command = new ModifyRectangleCmd(oldRectangle, dialogRectangle.getRectangle());
-	}
-	
-	public void modifyCircle() {
-		Circle oldCircle = (Circle) selectedShapeList.get(0);
-	    if (dialogCircle == null) 
-	    	dialogCircle = new DlgCircle();
-	    dialogCircle.setModal(true);
-	    dialogCircle.setCircle(oldCircle);
-	    dialogCircle.setVisible(true);
-		if (dialogCircle.isCommited()) 
-			command = new ModifyCircleCmd(oldCircle, dialogCircle.getCircle());
-	}
-	
-	public void modifyDonut() {
-		Donut oldDonut = (Donut) selectedShapeList.get(0);
-	    if (dialogDonut == null) 
-	    	dialogDonut = new DlgDonut();
-	    dialogDonut.setModal(true);
-	    dialogDonut.setDonut(oldDonut);
-	    dialogDonut.setVisible(true);
-		if (dialogDonut.isCommited())
-			command = new ModifyDonutCmd(oldDonut, dialogDonut.getDonut());
-	}
-	
-	public void modifyHexagon() {
-		HexagonAdapter oldHexagon = (HexagonAdapter) selectedShapeList.get(0);
-	    if (dialogHexagon == null) 
-	    	dialogHexagon = new DlgHexagon();
-	    dialogHexagon.setModal(true);
-	    dialogHexagon.setHexagon(oldHexagon);
-	    dialogHexagon.setVisible(true);
-		if (dialogHexagon.isCommited())
-			command = new ModifyHexagonCmd(oldHexagon, dialogHexagon.getHexagon());
-		
-	}
-	
 	public void delete() {
-		if (selectedShapeList.get(0) != null) {
-				Shape temp;
-				int position;
-				while(selectedShapeList.size() > 0) {
-					temp = selectedShapeList.get(0);
-					position = model.getShapes().indexOf(temp);
-					command = new RemoveShapeCmd(model, temp, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					undoStack.push(command);
-					selectedShapeList.remove(temp);
-				}
-				redoStack.clear();
-				disableButtons();
-				frame.repaint();
+		Shape temp;
+		int position;
+		while(selectedShapeList.size() > 0) {
+			temp = selectedShapeList.get(0);
+			position = model.getShapes().indexOf(temp);
+			command = new RemoveShapeCmd(model, temp, position);
+			command.execute();
+			frame.getTextArea().append(command.toString());
+			undoStack.push(command);
+			selectedShapeList.remove(temp);
 		}
+		redoStack.clear();
+		disableButtons();
+		frame.repaint();
 	}
 	
 	public void undo() {
@@ -536,6 +459,10 @@ public class DrawingController {
 			selectedShapeList.remove(temp);
 		}
 	}
+
+	public ArrayList<Shape> getSelectedShapeList() {
+		return selectedShapeList;
+	}
 	
 	public void setDialogRectangle(DlgRectangle dialogRectangle) {
 		this.dialogRectangle = dialogRectangle;
@@ -552,18 +479,6 @@ public class DrawingController {
 	public void setDialogHexagon(DlgHexagon dialogHexagon) {
 		this.dialogHexagon = dialogHexagon;
 	}
-	
-	public void setDialogPoint(DlgPoint dialogPoint) {
-		this.dialogPoint = dialogPoint;
-	}
-
-	public void setDialogLine(DlgLine dialogLine) {
-		this.dialogLine = dialogLine;
-	}
-
-	public ArrayList<Shape> getSelectedShapeList() {
-		return selectedShapeList;
-	}
 
 	public Stack<Command> getUndoStack() {
 		return undoStack;
@@ -572,5 +487,11 @@ public class DrawingController {
 	public Stack<Command> getRedoStack() {
 		return redoStack;
 	}
+
+	public ModificationService getModificationService() {
+		return modificationService;
+	}
+	
+	
 
 }
