@@ -1,21 +1,12 @@
 package mvc;
 
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Stack;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import command.AddShapeCmd;
 import command.BringToBackCmd;
@@ -29,6 +20,7 @@ import command.Command;
 
 import geometry.Shape;
 import services.ButtonsCheckService;
+import services.LoadFileService;
 import services.MakingShapeService;
 import services.ModificationService;
 import services.ReadLogLineService;
@@ -51,12 +43,11 @@ public class DrawingController {
 	
 	public Command command;
 	
-	private FileReader fileReader;
-	private BufferedReader bufferReader;
 	private ReadLogLineService readLogLineService;
 	private ModificationService modificationService;
 	private MakingShapeService makingShapeService;
 	private ButtonsCheckService buttonsCheckService;
+	private LoadFileService loadFileService;
 	
 	public DrawingController(DrawingModel model, DrawingFrame frame) {
 		this.model = model;
@@ -65,8 +56,9 @@ public class DrawingController {
 		modificationService = new ModificationService(this);
 		makingShapeService = new MakingShapeService(this.frame);
 		buttonsCheckService = new ButtonsCheckService(this.frame, this);
+		loadFileService = new LoadFileService(this.model, this.frame, this);
 	}
-	
+
 	
 	public void mouseClicked(MouseEvent e) {
 		if (frame.gettglSelection().isSelected())
@@ -156,14 +148,12 @@ public class DrawingController {
 	public void buttonSelectionClick(MouseEvent e) {
 		Shape temp = null;
 		selectedShape = null;
-
 		Iterator<Shape> iterator = model.getShapes().iterator();
 		while (iterator.hasNext()) {
 			temp = iterator.next();
 			if (temp.contains(e.getX(), e.getY()))
 				selectedShape = temp;
 		}
-
 		if (selectedShape != null)	
 			selectShapes();
 		else
@@ -190,7 +180,6 @@ public class DrawingController {
 		frame.getTextArea().append(command.toString());
 		undoStack.push(command);
 		redoStack.clear();
-		
 		changeButtonsAvailability();
 		frame.getView().repaint();
 	}
@@ -213,74 +202,15 @@ public class DrawingController {
 	}
 	
 	public void loadLog() {
-		try {
-
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle("Load log");
-			FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(".txt", "txt");
-			fileChooser.setAcceptAllFileFilterUsed(false);
-			fileChooser.setFileFilter(fileNameExtensionFilter);
-
-			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				File file = (fileChooser.getSelectedFile());
-
-				model.getShapes().clear();
-				
-				redoStack.clear();
-				undoStack.clear();
-				changeButtonsAvailability();
-
-				fileReader = new FileReader(file);
-				bufferReader = new BufferedReader(fileReader);
-
-				JOptionPane.showMessageDialog(null, "Log is loaded! Use load command button to draw!");
-				frame.getBtnCmdByCmd().setEnabled(true);
-				
-			}
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
-		}
+		loadFileService.loadLog();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void loadDrawing() {
-		try {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle("Load drawing");
-			
-			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				File file = (fileChooser.getSelectedFile());
-
-				FileInputStream fileStream = new FileInputStream(file);
-				ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-
-				model.getShapes().addAll((ArrayList<Shape>) objectStream.readObject());
-				
-				redoStack.clear();
-				undoStack.clear();
-				changeButtonsAvailability();
-				
-				frame.getView().repaint();
-			
-				objectStream.close();
-				fileStream.close();
-			}
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
-		}
+		loadFileService.loadDrawing();
 	}
 	
 	public void loadCmdByCmd() {
-		String logLine;
-		try {
-			if ((logLine = bufferReader.readLine()) != null) { 
-				readLogLine(logLine);
-			} else {
-				frame.getBtnCmdByCmd().setEnabled(false);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		loadFileService.loadCmdByCmd();
 	}
 	
 	public void readLogLine(String logLine) {
