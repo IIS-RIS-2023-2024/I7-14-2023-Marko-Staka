@@ -153,6 +153,48 @@ public class DrawingController {
 		commandExecute();
 	}
 	
+	public void buttonSelectionClick(MouseEvent e) {
+		Shape temp = null;
+		selectedShape = null;
+
+		Iterator<Shape> iterator = model.getShapes().iterator();
+		while (iterator.hasNext()) {
+			temp = iterator.next();
+			if (temp.contains(e.getX(), e.getY()))
+				selectedShape = temp;
+		}
+
+		if (selectedShape != null)	
+			selectShapes();
+		else
+			unselectShapes();
+	}
+	
+	public void selectShapes() {
+		command = selectedShape.isSelected() ? new UnselectShapeCmd(this, selectedShape) : new SelectShapeCmd(this, selectedShape);
+		commandExecute();
+		selectedShape = null;
+	}
+	
+	public void unselectShapes() {
+		Shape temp;
+		while(selectedShapeList.size() > 0) {
+			temp = selectedShapeList.get(0);
+			command = new UnselectShapeCmd(this, temp);
+			commandExecute();
+		}
+	}
+	
+	public void commandExecute() {
+		command.execute();
+		frame.getTextArea().append(command.toString());
+		undoStack.push(command);
+		redoStack.clear();
+		
+		changeButtonsAvailability();
+		frame.getView().repaint();
+	}
+	
 	public void textToList(JTextArea txaArea) {
 		String str = txaArea.getText().toString();
 		String[] strSplit = str.split(System.lineSeparator());
@@ -229,10 +271,10 @@ public class DrawingController {
 	}
 	
 	public void loadCmdByCmd() {
-		String line;
+		String logLine;
 		try {
-			if ((line = bufferReader.readLine()) != null) { 
-				readLogLine(line);
+			if ((logLine = bufferReader.readLine()) != null) { 
+				readLogLine(logLine);
 			} else {
 				frame.getBtnCmdByCmd().setEnabled(false);
 			}
@@ -241,51 +283,8 @@ public class DrawingController {
 		}
 	}
 	
-	public void readLogLine(String line) {
-		readLogLineService.readLogLine(line);
-	}
-	
-	public void buttonSelectionClick(MouseEvent e) {
-		Shape temp = null;
-		selectedShape = null;
-
-		Iterator<Shape> iterator = model.getShapes().iterator();
-		while (iterator.hasNext()) {
-			temp = iterator.next();
-			if (temp.contains(e.getX(), e.getY())) {
-				selectedShape = temp;
-			}
-		}
-
-		if (selectedShape != null) {	
-			Command command = selectedShape.isSelected() ? new UnselectShapeCmd(this, selectedShape) : new SelectShapeCmd(this, selectedShape);
-			command.execute();
-			frame.getTextArea().append(command.toString());
-			undoStack.push(command);
-			selectedShape = null;
-		} else {
-			unselectShapes();
-		}
-		redoStack.clear();	
-	}
-	
-	public void unselectShapes() {
-		Shape temp;
-		while(selectedShapeList.size() > 0) {
-			temp = selectedShapeList.get(0);
-			command = new UnselectShapeCmd(this, temp);
-			commandExecute();
-		}
-	}
-	
-	public void commandExecute() {
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		undoStack.push(command);
-		redoStack.clear();
-		
-		changeButtonsAvailability();
-		frame.getView().repaint();
+	public void readLogLine(String logLine) {
+		readLogLineService.readLogLine(logLine);
 	}
 	
 	public void changeButtonsAvailability() {
@@ -312,5 +311,4 @@ public class DrawingController {
 		return makingShapeService;
 	}
 	
-
 }

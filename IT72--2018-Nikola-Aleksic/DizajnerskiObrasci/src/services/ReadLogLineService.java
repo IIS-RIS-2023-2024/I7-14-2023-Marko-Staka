@@ -45,105 +45,48 @@ public class ReadLogLineService {
 		this.controller = controller;
 	}
 		
-	public void readLogLine(String line) {
-		
-		String[] lineElements = line.split(":"); 
-		
-		String valuesLine = replaceCharacter(lineElements);
-																	
-		String[] values = valuesLine.split(",");
+	public void readLogLine(String line) {	
+		String[] lineElements = line.split(":"); 														
+		String[] values = replaceCharacter(lineElements).split(",");
 
-		if (lineElements[0].equals("Add")) {
-			if (lineElements[1].equals(" Point")) {
-				readAddPoint(values);
-			} else if (lineElements[1].equals(" Line")) {
-				readAddLine(values);
-			} else if (lineElements[1].equals(" Rectangle")) {
-				readAddRectangle(values);
-			} else if (lineElements[1].equals(" Circle")) {
-				readAddCircle(values);
-			} else if (lineElements[1].equals(" Donut")) {
-				readAddDonut(values);
-			} else if (lineElements[1].equals(" Hexagon")) {
-				readAddHexagon(values);
-			}
-		} else if(lineElements[0].equals("Select")){
+		if (lineElements[0].equals("Add"))
+			readAddShape(lineElements[1], values);
+		else if(lineElements[0].equals("Select"))
 			readSelectShape(line.substring(8));
-		} else if(lineElements[0].equals("Unselect")){
+		else if(lineElements[0].equals("Unselect"))
 			readDeselectShape(line.substring(10));
-		} else if (lineElements[0].equals("Modify")) {
-			String newValuesLine = lineElements[3].replaceAll("[^0-9,.]", "");
-			String[] newValues = newValuesLine.split(",");
-
-			if (lineElements[1].equals(" Point")) {
-				readModifyPoint(values, newValues);
-			} else if (lineElements[1].equals(" Line")) {
-				readModifyLine(values, newValues);
-			} else if (lineElements[1].equals(" Rectangle")) {
-				readModifyRectangle(values, newValues);
-			} else if (lineElements[1].equals(" Circle")) {
-				readModifyCircle(values, newValues);
-			} else if (lineElements[1].equals(" Donut")) {
-				readModifyDonut(values, newValues);
-			} else if (lineElements[1].equals(" Hexagon")) {
-				readModifyHexagon(values, newValues);
-			}
-		} else if (lineElements[0].equals("Delete")) {
-			String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
-			String[] sValues = shapeValues.split(",");
-			
-			if (lineElements[1].equals(" Point")) {
-				readDeletePoint(sValues);
-			} else if (lineElements[1].equals(" Line")) {
-				readDeleteLine(sValues);
-			} else if (lineElements[1].equals(" Rectangle")) {
-				readDeleteRectangle(sValues);
-			} else if (lineElements[1].equals(" Circle")) {
-				readDeleteCircle(sValues);
-			} else if (lineElements[1].equals(" Donut")) {
-				readDeleteDonut(sValues);
-			} else if (lineElements[1].equals(" Hexagon")) {
-				readDeleteHexagon(sValues);
-			}
-		} else if ((lineElements[0].equals("Move to back")) || (lineElements[0].equals("Move to front"))
-				|| (lineElements[0].equals("Bring to back")) || (lineElements[0].equals("Bring to front"))) {
-
-			if (lineElements[1].equals(" Point")) {
-				readPointMoveTo(lineElements[0], values);
-			} else if (lineElements[1].equals(" Line")) {
-				readLineMoveTo(lineElements[0], values);
-			} else if (lineElements[1].equals(" Rectangle")) {
-				readRectangleMoveTo(lineElements[0], values);
-			} else if (lineElements[1].equals(" Circle")) {
-				readCircleMoveTo(lineElements[0], values);
-			} else if (lineElements[1].equals(" Donut")) {
-				readDonutMoveTo(lineElements[0], values);
-			} else if (lineElements[1].equals(" Hexagon")) {
-				readHexagonMoveTo(lineElements[0], values);
-			}
-		} else if (lineElements[0].equals("Undo")) {
-			command = controller.getUndoStack().peek();
-			command.unexecute();
-			frame.getTextArea().append("Undo: [ " + controller.getUndoStack().peek().toString().replace("\n","") + " ]\n");
-			frame.repaint();
-			controller.getUndoStack().pop();
-			controller.getRedoStack().push(command);
-		} else if (lineElements[0].equals("Redo")) {
+		else if (lineElements[0].equals("Modify")) 
+			readModifyShape(lineElements, values);
+		else if (lineElements[0].equals("Delete")) 
+			readDeleteShape(lineElements);
+		else if ((lineElements[0].equals("Move to back")) || (lineElements[0].equals("Move to front")) || (lineElements[0].equals("Bring to back")) || (lineElements[0].equals("Bring to front"))) 
+			readShapeMoveTo(lineElements, values);
+		else if (lineElements[0].equals("Undo")) 
+			controller.undo();
+		else if (lineElements[0].equals("Redo")) 
 			controller.redo();
-		}
-		controller.changeButtonsAvailability();
-		frame.getView().repaint();
-		
+	}
+	
+	public void readAddShape(String shape, String[] values) {
+		if (shape.equals(" Point"))
+			readAddPoint(values);
+		else if (shape.equals(" Line")) 
+			readAddLine(values);
+		else if (shape.equals(" Rectangle")) 
+			readAddRectangle(values);
+		else if (shape.equals(" Circle")) 
+			readAddCircle(values);
+		else if (shape.equals(" Donut")) 
+			readAddDonut(values);
+		else if (shape.equals(" Hexagon")) 
+			readAddHexagon(values);
 	}
 
 	public void readAddPoint(String[] values) {
 		Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
 				 new Color(Integer.parseInt("-"+(values[2]))));
 		command = new AddShapeCmd(model, p);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		controller.getUndoStack().push(command);
-		controller.getRedoStack().clear();
+		executeCommand(command);
 	}
 		
 	public void readAddLine(String[] values) {
@@ -153,10 +96,7 @@ public class ReadLogLineService {
 		Line l = new Line(start, end, new Color(Integer.parseInt("-"+(values[4]))));
 
 		command = new AddShapeCmd(model, l);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		controller.getUndoStack().push(command);
-		controller.getRedoStack().clear();
+		executeCommand(command);
 	}
 	
 	public void readAddRectangle(String[] values) {
@@ -167,10 +107,7 @@ public class ReadLogLineService {
 		Rectangle r = new Rectangle(upperLeft, height, width, new Color(Integer.parseInt("-"+(values[5]))),
 				new Color(Integer.parseInt("-"+(values[4]))));
 		command = new AddShapeCmd(model, r);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		controller.getUndoStack().push(command);
-		controller.getRedoStack().clear();
+		executeCommand(command);
 	}
 	
 	public void readAddCircle(String[] values) {
@@ -179,10 +116,7 @@ public class ReadLogLineService {
 
 		Circle c = new Circle(center, radius, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
 		command = new AddShapeCmd(model, c);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		controller.getUndoStack().push(command);
-		controller.getRedoStack().clear();
+		executeCommand(command);
 	}
 	
 	public void readAddDonut(String[] values) {
@@ -192,10 +126,7 @@ public class ReadLogLineService {
 
 		Donut d = new Donut(center, radius, innerRadius, new Color(Integer.parseInt("-"+(values[5]))), new Color(Integer.parseInt("-"+(values[4]))));
 		command = new AddShapeCmd(model, d);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		controller.getUndoStack().push(command);
-		controller.getRedoStack().clear();
+		executeCommand(command);
 	}
 	
 	public void readAddHexagon(String[] values) {
@@ -205,34 +136,15 @@ public class ReadLogLineService {
 		Point p = new Point(x , y);
 		HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
 		command = new AddShapeCmd(model, h);
-		command.execute();
-		frame.getTextArea().append(command.toString());
-		controller.getUndoStack().push(command);
-		controller.getRedoStack().clear();	
-	}
-	
-	public String replaceCharacter(String[] lineElements){
-		if(lineElements[2] != null) {
-			return lineElements[2].replaceAll("[^0-9,.]", "");
-		} else {
-			return lineElements[1].replaceAll("[^0-9,.]", "");
-		}
+		executeCommand(command);
 	}
 
 	public void readSelectShape(String shape) {
 		for(Shape s : model.getShapes()) {
 			if(s.toString().equals(shape)) {
-				
-				if(!s.isSelected()) {
-					command = new SelectShapeCmd(controller, s);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-					controller.changeButtonsAvailability();
-					frame.repaint();
-					break;
-				}
+				command = new SelectShapeCmd(controller, s);
+				executeCommand(command);
+				break;
 			}
 		}
 	}
@@ -240,19 +152,29 @@ public class ReadLogLineService {
 	public void readDeselectShape(String shape) {
 		for(Shape s : model.getShapes()) {
 			if(s.toString().equals(shape)) {
-				
-				if(s.isSelected()) {
-					command = new UnselectShapeCmd(controller, s);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-					controller.changeButtonsAvailability();
-					frame.repaint();
-					break;
-				}
+				command = new UnselectShapeCmd(controller, s);
+				executeCommand(command);
+				break;
 			}
 		}
+	}
+	
+	public void readModifyShape(String[] lineElements, String[] values) {
+		String newValuesLine = lineElements[3].replaceAll("[^0-9,.]", "");
+		String[] newValues = newValuesLine.split(",");
+
+		if (lineElements[1].equals(" Point")) 
+			readModifyPoint(values, newValues);
+		else if (lineElements[1].equals(" Line")) 
+			readModifyLine(values, newValues);
+		else if (lineElements[1].equals(" Rectangle")) 
+			readModifyRectangle(values, newValues);
+		else if (lineElements[1].equals(" Circle")) 
+			readModifyCircle(values, newValues);
+		else if (lineElements[1].equals(" Donut")) 
+			readModifyDonut(values, newValues);
+		else if (lineElements[1].equals(" Hexagon")) 
+			readModifyHexagon(values, newValues);
 	}
 	
 	public void readModifyPoint(String[] values, String[] newValues) {
@@ -260,15 +182,11 @@ public class ReadLogLineService {
 				new Color(Integer.parseInt("-"+(values[2]))));
 		Point newPoint = new Point(Integer.parseInt(newValues[0]), Integer.parseInt(newValues[1]),
 				new Color(Integer.parseInt("-"+(newValues[2]))));
+		
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldPoint.toString())) {
 				command = new ModifyPointCmd((Point) s, newPoint);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				controller.getRedoStack().clear();
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -287,19 +205,13 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldLine.toString())) {
 				command = new ModifyLineCmd((Line) s, newLine);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				controller.getRedoStack().clear();
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
 	}
 	
 	public void readModifyRectangle(String[] values, String[] newValues) {
-
 		Rectangle oldRectangle = new Rectangle(
 				new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1])),
 				Integer.parseInt(values[2]), Integer.parseInt(values[3]), 
@@ -314,12 +226,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldRectangle.toString())) {
 				command = new ModifyRectangleCmd((Rectangle) s, newRectangle);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				controller.getRedoStack().clear();
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -339,12 +246,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldCircle.toString())) {
 				command = new ModifyCircleCmd((Circle) s, newCircle);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				controller.getRedoStack().clear();
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -364,12 +266,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldDonut.toString())) {
 				command = new ModifyDonutCmd((Donut) s, newDonut);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				controller.getRedoStack().clear();
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -388,15 +285,28 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldHexagon.toString())) {
 				command = new ModifyHexagonCmd((HexagonAdapter) s, newHexagon);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				controller.getRedoStack().clear();
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
+	}
+	
+	public void readDeleteShape(String[] lineElements) {
+		String shapeValues = lineElements[2].replaceAll("[^0-9,.]", "");
+		String[] sValues = shapeValues.split(",");
+		
+		if (lineElements[1].equals(" Point")) 
+			readDeletePoint(sValues);
+		else if (lineElements[1].equals(" Line")) 
+			readDeleteLine(sValues);
+		else if (lineElements[1].equals(" Rectangle")) 
+			readDeleteRectangle(sValues);
+		else if (lineElements[1].equals(" Circle")) 
+			readDeleteCircle(sValues);
+		else if (lineElements[1].equals(" Donut")) 
+			readDeleteDonut(sValues);
+		else if (lineElements[1].equals(" Hexagon")) 
+			readDeleteHexagon(sValues);
 	}
 	
 	public void readDeletePoint(String[] values) {
@@ -409,12 +319,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				selectedShapeList.remove(temp);
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -432,12 +337,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				selectedShapeList.remove(temp);
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -457,12 +357,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				selectedShapeList.remove(temp);
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -481,12 +376,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				selectedShapeList.remove(temp);
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -506,12 +396,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				selectedShapeList.remove(temp);
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}
@@ -529,100 +414,51 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				selectedShapeList.remove(temp);
-				controller.changeButtonsAvailability();
-				frame.repaint();
+				executeCommand(command);
 				break;
 			}
 		}	
 	}
 	
+	public void readShapeMoveTo(String[] lineElements, String[] values) {
+		if (lineElements[1].equals(" Point")) 
+			readPointMoveTo(lineElements[0], values);
+		else if (lineElements[1].equals(" Line")) 
+			readLineMoveTo(lineElements[0], values);
+		else if (lineElements[1].equals(" Rectangle")) 
+			readRectangleMoveTo(lineElements[0], values);
+		else if (lineElements[1].equals(" Circle")) 
+			readCircleMoveTo(lineElements[0], values);
+		else if (lineElements[1].equals(" Donut")) 
+			readDonutMoveTo(lineElements[0], values);
+		else if (lineElements[1].equals(" Hexagon")) 
+			readHexagonMoveTo(lineElements[0], values);
+	}
+	
 	public void readPointMoveTo(String commandLog, String[] values) {
 		Color color = new Color(Integer.parseInt("-"+(values[2])));
-		Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), color);
+		Point point = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), color);
 
-		for (Shape s : model.getShapes()) {
-			if (s.toString().equals(p.toString())) {
-				int position = model.getShapes().indexOf(s);
-				if (commandLog.equals("Move to back")) {
-					command = new ToBackCmd(model, (Point) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Move to front")){
-					command = new ToFrontCmd(model, (Point) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to back")){
-					command = new BringToBackCmd(model, (Point) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to front")){
-					command = new BringToFrontCmd(model, (Point) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				controller.changeButtonsAvailability();
-				frame.repaint();
+		for (Shape shape : model.getShapes()) {
+			if (shape.toString().equals(point.toString())) {
+				command = createMoveToCommand(commandLog, shape);
+				executeCommand(command);
 				break;
 			}
 		}
 	}
 	
 	public void readLineMoveTo(String commandLog, String[] values) {
-
 		Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
 		Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 		Color color = new Color(Integer.parseInt("-"+(values[4])));
 
-		Line l = new Line(start, end, color);
+		Line line = new Line(start, end, color);
 
-		for (Shape s : model.getShapes()) {
-			if (s.toString().equals(l.toString())) {
-				int position = model.getShapes().indexOf(s);
-				if (commandLog.equals("Move to back")) {
-					command = new ToBackCmd(model, (Line) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Move to front")){
-					command = new ToFrontCmd(model, (Line) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to back")){
-					command = new BringToBackCmd(model, (Line) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to front")){
-					command = new BringToFrontCmd(model, (Line) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				controller.changeButtonsAvailability();
-				frame.repaint();
+		for (Shape shape : model.getShapes()) {
+			if (shape.toString().equals(line.toString())) {
+				command = createMoveToCommand(commandLog, shape);
+				executeCommand(command);
 				break;
 			}
 		}
@@ -635,40 +471,12 @@ public class ReadLogLineService {
 		Color color = new Color(Integer.parseInt("-"+(values[4])));
 		Color innerColor = new Color(Integer.parseInt("-"+(values[5])));
 
-		Rectangle r = new Rectangle(start, height, width, innerColor, color);
-		for (Shape s : model.getShapes()) {
-			if (s.toString().equals(r.toString())) {
-				int position = model.getShapes().indexOf(s);
-				if (commandLog.equals("Move to back")) {
-					command = new ToBackCmd(model, (Rectangle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Move to front")){
-					command = new ToFrontCmd(model, (Rectangle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to back")){
-					command = new BringToBackCmd(model, (Rectangle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to front")){
-					command = new BringToFrontCmd(model, (Rectangle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				controller.changeButtonsAvailability();
-				frame.repaint();
+		Rectangle rectangle = new Rectangle(start, height, width, innerColor, color);
+		
+		for (Shape shape : model.getShapes()) {
+			if (shape.toString().equals(rectangle.toString())) {
+				command = createMoveToCommand(commandLog, shape);
+				executeCommand(command);
 				break;
 			}
 		}
@@ -680,41 +488,12 @@ public class ReadLogLineService {
 		Color color = new Color(Integer.parseInt("-"+(values[4])));
 		Color innerColor = new Color(Integer.parseInt("-"+(values[3])));
 
-		Circle c = new Circle(center, radius, color, innerColor);
+		Circle circle = new Circle(center, radius, color, innerColor);
 
-		for (Shape s : model.getShapes()) {
-			if (s.toString().equals(c.toString())) {
-				int position = model.getShapes().indexOf(s);
-				if (commandLog.equals("Move to back")) {
-					command = new ToBackCmd(model, (Circle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Move to front")){
-					command = new ToFrontCmd(model, (Circle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to back")){
-					command = new BringToBackCmd(model, (Circle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to front")){
-					command = new BringToFrontCmd(model, (Circle) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				controller.changeButtonsAvailability();
-				frame.repaint();
+		for (Shape shape : model.getShapes()) {
+			if (shape.toString().equals(circle.toString())) {
+				command = createMoveToCommand(commandLog, shape);
+				executeCommand(command);
 				break;
 			}
 		}	
@@ -727,41 +506,12 @@ public class ReadLogLineService {
 		Color color = new Color(Integer.parseInt("-"+(values[5])));
 		Color innerColor = new Color(Integer.parseInt("-"+(values[4])));
 
-		Donut d = new Donut(center, radius, innerRadius, color, innerColor);
+		Donut donut = new Donut(center, radius, innerRadius, color, innerColor);
 
-		for (Shape s : model.getShapes()) {
-			int position = model.getShapes().indexOf(s);
-			if (s.toString().equals(d.toString())) {
-				if (commandLog.equals("Move to back")) {
-					command = new ToBackCmd(model, (Donut) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Move to front")){
-					command = new ToFrontCmd(model, (Donut) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to back")){
-					command = new BringToBackCmd(model, (Donut) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				else if (commandLog.equals("Bring to front")){
-					command = new BringToFrontCmd(model, (Donut) s, position);
-					command.execute();
-					frame.getTextArea().append(command.toString());
-					controller.getUndoStack().push(command);
-					controller.getRedoStack().clear();
-				}
-				controller.changeButtonsAvailability();
-				frame.repaint();
+		for (Shape shape : model.getShapes()) {
+			if (shape.toString().equals(donut.toString())) {
+				command = createMoveToCommand(commandLog, shape);
+				executeCommand(command);
 				break;
 			}
 		}
@@ -770,30 +520,47 @@ public class ReadLogLineService {
 	public void readHexagonMoveTo(String commandLog, String[] values) {
 		int x = Integer.parseInt(values[0]);
 		int y = Integer.parseInt(values[1]);
-		int r = Integer.parseInt(values[2]);
-		Point p = new Point(x , y);
-		HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
+		int radius = Integer.parseInt(values[2]);
+		Point centerPoint = new Point(x , y);
+		HexagonAdapter hexagon = new HexagonAdapter(centerPoint, radius, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
 		
 		for (Shape shape : model.getShapes()) {
-			if (shape.toString().equals(h.toString())) {
-				int position = model.getShapes().indexOf(shape);
-				if (commandLog.equals("Move to back")) 
-					command = new ToBackCmd(model, shape, position);
-				else if (commandLog.equals("Move to front"))
-					command = new ToFrontCmd(model, shape, position);
-				else if (commandLog.equals("Bring to back"))
-					command = new BringToBackCmd(model, shape, position);
-				else if (commandLog.equals("Bring to front"))
-					command = new BringToFrontCmd(model, shape, position);
-				command.execute();
-				frame.getTextArea().append(command.toString());
-				controller.getUndoStack().push(command);
-				controller.getRedoStack().clear();
-				controller.changeButtonsAvailability();
-				frame.repaint();
+			if (shape.toString().equals(hexagon.toString())) {
+				command = createMoveToCommand(commandLog, shape);
+				executeCommand(command);
 				break;
 			}
 		}
 	}
 	
+	public Command createMoveToCommand(String commandLog, Shape shape) {
+		int shapePosition = model.getShapes().indexOf(shape);
+		
+		if (commandLog.equals("Move to back")) 
+			command = new ToBackCmd(model, shape, shapePosition);
+		else if (commandLog.equals("Move to front"))
+			command = new ToFrontCmd(model, shape, shapePosition);
+		else if (commandLog.equals("Bring to back"))
+			command = new BringToBackCmd(model, shape, shapePosition);
+		else if (commandLog.equals("Bring to front"))
+			command = new BringToFrontCmd(model, shape, shapePosition);
+		return command;
+	}
+	
+	public void executeCommand(Command command) {
+		command.execute();
+		controller.getUndoStack().push(command);
+		controller.getRedoStack().clear();
+		controller.changeButtonsAvailability();
+		frame.getTextArea().append(command.toString());
+		frame.repaint();
+	}
+	
+	public String replaceCharacter(String[] lineElements){
+		if(lineElements[2] != null) {
+			return lineElements[2].replaceAll("[^0-9,.]", "");
+		} else {
+			return lineElements[1].replaceAll("[^0-9,.]", "");
+		}
+	}
 }
