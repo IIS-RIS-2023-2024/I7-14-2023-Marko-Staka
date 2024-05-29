@@ -437,31 +437,18 @@ public class ReadLogLineService {
 	
 	public void readPointMoveTo(String commandLog, String[] values) {
 		Color color = new Color(Integer.parseInt("-"+(values[2])));
+		
 		Point point = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]), color);
-
-		for (Shape shape : model.getShapes()) {
-			if (shape.toString().equals(point.toString())) {
-				command = createMoveToCommand(commandLog, shape);
-				executeCommand(command);
-				break;
-			}
-		}
+		executeMoveToCommand(commandLog, point);
 	}
 	
 	public void readLineMoveTo(String commandLog, String[] values) {
-		Point start = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-		Point end = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+		Point startPoint = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+		Point endPoint = new Point(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 		Color color = new Color(Integer.parseInt("-"+(values[4])));
 
-		Line line = new Line(start, end, color);
-
-		for (Shape shape : model.getShapes()) {
-			if (shape.toString().equals(line.toString())) {
-				command = createMoveToCommand(commandLog, shape);
-				executeCommand(command);
-				break;
-			}
-		}
+		Line line = new Line(startPoint, endPoint, color);
+		executeMoveToCommand(commandLog, line);
 	}
 	
 	public void readRectangleMoveTo(String commandLog, String[] values) {
@@ -472,14 +459,7 @@ public class ReadLogLineService {
 		Color innerColor = new Color(Integer.parseInt("-"+(values[5])));
 
 		Rectangle rectangle = new Rectangle(start, height, width, innerColor, color);
-		
-		for (Shape shape : model.getShapes()) {
-			if (shape.toString().equals(rectangle.toString())) {
-				command = createMoveToCommand(commandLog, shape);
-				executeCommand(command);
-				break;
-			}
-		}
+		executeMoveToCommand(commandLog, rectangle);
 	}
 	
 	public void readCircleMoveTo(String commandLog, String[] values) {
@@ -489,14 +469,7 @@ public class ReadLogLineService {
 		Color innerColor = new Color(Integer.parseInt("-"+(values[3])));
 
 		Circle circle = new Circle(center, radius, color, innerColor);
-
-		for (Shape shape : model.getShapes()) {
-			if (shape.toString().equals(circle.toString())) {
-				command = createMoveToCommand(commandLog, shape);
-				executeCommand(command);
-				break;
-			}
-		}	
+		executeMoveToCommand(commandLog, circle);	
 	}
 	
 	public void readDonutMoveTo(String commandLog, String[] values) {
@@ -507,25 +480,22 @@ public class ReadLogLineService {
 		Color innerColor = new Color(Integer.parseInt("-"+(values[4])));
 
 		Donut donut = new Donut(center, radius, innerRadius, color, innerColor);
-
-		for (Shape shape : model.getShapes()) {
-			if (shape.toString().equals(donut.toString())) {
-				command = createMoveToCommand(commandLog, shape);
-				executeCommand(command);
-				break;
-			}
-		}
+		executeMoveToCommand(commandLog, donut);
 	}
 	
 	public void readHexagonMoveTo(String commandLog, String[] values) {
 		int x = Integer.parseInt(values[0]);
 		int y = Integer.parseInt(values[1]);
 		int radius = Integer.parseInt(values[2]);
-		Point centerPoint = new Point(x , y);
-		HexagonAdapter hexagon = new HexagonAdapter(centerPoint, radius, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
+		Point center = new Point(x , y);
 		
-		for (Shape shape : model.getShapes()) {
-			if (shape.toString().equals(hexagon.toString())) {
+		HexagonAdapter hexagon = new HexagonAdapter(center, radius, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
+		executeMoveToCommand(commandLog, hexagon);
+	}
+	
+	public void executeMoveToCommand(String commandLog, Shape shape) {
+		for (Shape s : model.getShapes()) {
+			if (shape.toString().equals(s.toString())) {
 				command = createMoveToCommand(commandLog, shape);
 				executeCommand(command);
 				break;
