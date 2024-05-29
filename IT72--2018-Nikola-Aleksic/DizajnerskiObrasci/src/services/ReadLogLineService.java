@@ -495,8 +495,8 @@ public class ReadLogLineService {
 	
 	public void executeMoveToCommand(String commandLog, Shape shape) {
 		for (Shape s : model.getShapes()) {
-			if (shape.toString().equals(s.toString())) {
-				command = createMoveToCommand(commandLog, shape);
+			if (s.toString().equals(shape.toString())) {
+				command = createMoveToCommand(commandLog, s);
 				executeCommand(command);
 				break;
 			}
