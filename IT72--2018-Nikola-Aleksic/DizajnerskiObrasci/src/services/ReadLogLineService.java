@@ -86,7 +86,7 @@ public class ReadLogLineService {
 		Point p = new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
 				 new Color(Integer.parseInt("-"+(values[2]))));
 		command = new AddShapeCmd(model, p);
-		executeCommand(command);
+		executeCommand();
 	}
 		
 	public void readAddLine(String[] values) {
@@ -96,7 +96,7 @@ public class ReadLogLineService {
 		Line l = new Line(start, end, new Color(Integer.parseInt("-"+(values[4]))));
 
 		command = new AddShapeCmd(model, l);
-		executeCommand(command);
+		executeCommand();
 	}
 	
 	public void readAddRectangle(String[] values) {
@@ -107,7 +107,7 @@ public class ReadLogLineService {
 		Rectangle r = new Rectangle(upperLeft, height, width, new Color(Integer.parseInt("-"+(values[5]))),
 				new Color(Integer.parseInt("-"+(values[4]))));
 		command = new AddShapeCmd(model, r);
-		executeCommand(command);
+		executeCommand();
 	}
 	
 	public void readAddCircle(String[] values) {
@@ -116,7 +116,7 @@ public class ReadLogLineService {
 
 		Circle c = new Circle(center, radius, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
 		command = new AddShapeCmd(model, c);
-		executeCommand(command);
+		executeCommand();
 	}
 	
 	public void readAddDonut(String[] values) {
@@ -126,7 +126,7 @@ public class ReadLogLineService {
 
 		Donut d = new Donut(center, radius, innerRadius, new Color(Integer.parseInt("-"+(values[5]))), new Color(Integer.parseInt("-"+(values[4]))));
 		command = new AddShapeCmd(model, d);
-		executeCommand(command);
+		executeCommand();
 	}
 	
 	public void readAddHexagon(String[] values) {
@@ -136,14 +136,14 @@ public class ReadLogLineService {
 		Point p = new Point(x , y);
 		HexagonAdapter h = new HexagonAdapter(p, r, new Color(Integer.parseInt("-"+(values[4]))), new Color(Integer.parseInt("-"+(values[3]))));
 		command = new AddShapeCmd(model, h);
-		executeCommand(command);
+		executeCommand();
 	}
 
 	public void readSelectShape(String shape) {
 		for(Shape s : model.getShapes()) {
 			if(s.toString().equals(shape)) {
 				command = new SelectShapeCmd(controller, s);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -153,7 +153,7 @@ public class ReadLogLineService {
 		for(Shape s : model.getShapes()) {
 			if(s.toString().equals(shape)) {
 				command = new UnselectShapeCmd(controller, s);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -186,7 +186,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldPoint.toString())) {
 				command = new ModifyPointCmd((Point) s, newPoint);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -205,7 +205,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldLine.toString())) {
 				command = new ModifyLineCmd((Line) s, newLine);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -226,7 +226,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldRectangle.toString())) {
 				command = new ModifyRectangleCmd((Rectangle) s, newRectangle);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -246,7 +246,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldCircle.toString())) {
 				command = new ModifyCircleCmd((Circle) s, newCircle);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -266,7 +266,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldDonut.toString())) {
 				command = new ModifyDonutCmd((Donut) s, newDonut);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -285,7 +285,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(oldHexagon.toString())) {
 				command = new ModifyHexagonCmd((HexagonAdapter) s, newHexagon);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -319,7 +319,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -337,7 +337,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -357,7 +357,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -376,7 +376,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -396,7 +396,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -414,7 +414,7 @@ public class ReadLogLineService {
 				Shape temp = s;
 				position = model.getShapes().indexOf(s);
 				command = new RemoveShapeCmd(model, temp, position);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}	
@@ -497,7 +497,7 @@ public class ReadLogLineService {
 		for (Shape s : model.getShapes()) {
 			if (s.toString().equals(shape.toString())) {
 				command = createMoveToCommand(commandLog, s);
-				executeCommand(command);
+				executeCommand();
 				break;
 			}
 		}
@@ -517,7 +517,7 @@ public class ReadLogLineService {
 		return command;
 	}
 	
-	public void executeCommand(Command command) {
+	public void executeCommand() {
 		command.execute();
 		controller.getUndoStack().push(command);
 		controller.getRedoStack().clear();
