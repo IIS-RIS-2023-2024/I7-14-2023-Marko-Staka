@@ -15,14 +15,12 @@ public class AddShapeCmd implements Command{
 	
 	@Override
 	public void execute() {
-		model.add(shape);
-		
+		model.add(shape);	
 	}
 
 	@Override
 	public void unexecute() {
-		model.remove(shape);
-		
+		model.remove(shape);	
 	}
 
 	@Override

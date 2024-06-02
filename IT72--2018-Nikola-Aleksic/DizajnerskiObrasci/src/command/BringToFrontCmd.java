@@ -22,7 +22,6 @@ public class BringToFrontCmd implements Command {
 		for (int i = position; i < (model.getShapes().size() - 1); i++) {
 			Collections.swap(model.getShapes(), i, i + 1);
 		}
-
 	}
 
 	@Override

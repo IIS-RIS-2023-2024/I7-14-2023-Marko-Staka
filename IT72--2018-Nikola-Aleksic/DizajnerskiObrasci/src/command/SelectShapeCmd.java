@@ -17,7 +17,6 @@ public class SelectShapeCmd implements Command{
 	public void execute() {
 		shape.setSelected(true);
 		controller.getSelectedShapeList().add(shape);
-
 	}
 
 	@Override

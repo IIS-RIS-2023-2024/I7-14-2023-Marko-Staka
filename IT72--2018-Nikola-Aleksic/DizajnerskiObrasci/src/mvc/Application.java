@@ -11,7 +11,7 @@ public class Application {
 		DrawingController controller = new DrawingController(model, frame);
 		frame.setController(controller);
 
-		frame.setTitle("Aleksic Nikola IT72/2018");
+		frame.setTitle("RIS projekat - I7 14/2023 Marko Staka - projekat Nikole Aleksica IT72/2018");
 		frame.setSize(900, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);

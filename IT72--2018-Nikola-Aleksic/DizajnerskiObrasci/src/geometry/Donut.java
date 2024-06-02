@@ -8,9 +8,7 @@ public class Donut extends Circle {
 	private static final long serialVersionUID = 1L;
 	private int innerRadius;
 
-	public Donut() {
-
-	}
+	public Donut() { }
 
 	public Donut(Point center, int radius, int innerRadius) {
 		super(center, radius);

@@ -82,14 +82,14 @@ public class DrawingController {
 	}
 
 	public void delete() {
-		Shape temp;
+		Shape tempShape;
 		int position;
 		while(selectedShapeList.size() > 0) {
-			temp = selectedShapeList.get(0);
-			position = model.getShapes().indexOf(temp);
-			command = new RemoveShapeCmd(model, temp, position);
+			tempShape = selectedShapeList.get(0);
+			position = model.getShapes().indexOf(tempShape);
+			command = new RemoveShapeCmd(model, tempShape, position);
 			commandExecute();
-			selectedShapeList.remove(temp);
+			selectedShapeList.remove(tempShape);
 		}
 	}
 	
@@ -116,23 +116,20 @@ public class DrawingController {
 	public void toBack() {
 		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
-		
 		command = new ToBackCmd(model, shape, position);
 		commandExecute();
 	}
 	
 	public void toFront() {
 		Shape shape = selectedShapeList.get(0);
-		int position = model.getShapes().indexOf(shape);
-		
+		int position = model.getShapes().indexOf(shape);	
 		command = new ToFrontCmd(model, shape, position);
 		commandExecute();
-		}
+	}
 	
 	public void bringToBack() {
 		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
-		
 		command = new BringToBackCmd(model, shape, position);
 		commandExecute();
 	}
@@ -140,7 +137,6 @@ public class DrawingController {
 	public void bringToFront() {
 		Shape shape = selectedShapeList.get(0);
 		int position = model.getShapes().indexOf(shape);
-		
 		command = new BringToFrontCmd(model, shape, position);
 		commandExecute();
 	}
@@ -167,10 +163,10 @@ public class DrawingController {
 	}
 	
 	public void unselectShapes() {
-		Shape temp;
+		Shape tempShape;
 		while(selectedShapeList.size() > 0) {
-			temp = selectedShapeList.get(0);
-			command = new UnselectShapeCmd(this, temp);
+			tempShape = selectedShapeList.get(0);
+			command = new UnselectShapeCmd(this, tempShape);
 			commandExecute();
 		}
 	}

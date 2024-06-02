@@ -17,13 +17,11 @@ public class ModifyRectangleCmd implements Command{
 	public void execute() {
 		original = oldState.clone(original);
 		oldState = newState.clone(oldState);
-		
 	}
 
 	@Override
 	public void unexecute() {
-		oldState = original.clone(oldState);
-		
+		oldState = original.clone(oldState);	
 	}
 	
 	@Override

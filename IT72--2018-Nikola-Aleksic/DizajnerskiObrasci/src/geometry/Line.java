@@ -9,9 +9,7 @@ public class Line extends Shape {
 	private Point startPoint = new Point();
 	private Point endPoint = new Point();
 	
-	public Line() {
-		
-	}
+	public Line() { }
 	
 	public Line(Point startPoint, Point endPoint) {
 		this.startPoint = startPoint;

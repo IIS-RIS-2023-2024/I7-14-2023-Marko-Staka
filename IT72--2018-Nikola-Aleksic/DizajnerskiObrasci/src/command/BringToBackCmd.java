@@ -22,7 +22,6 @@ public class BringToBackCmd implements Command {
 		for (int i = position; i > 0; i--) {
 			Collections.swap(model.getShapes(), i, i - 1);
 		}
-
 	}
 
 	@Override

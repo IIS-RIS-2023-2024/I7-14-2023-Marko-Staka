@@ -13,9 +13,7 @@ public class HexagonAdapter extends SurfaceShape implements Moveable{
 	private static final long serialVersionUID = 1L;
 	private Hexagon hexagon = new Hexagon(0, 0, 0);
 
-	public HexagonAdapter() {
-
-	}
+	public HexagonAdapter() {}
 	
 	public HexagonAdapter(Point center, int radius) {
 		this.hexagon = new Hexagon(center.getX(), center.getY(), radius);
@@ -51,8 +49,7 @@ public class HexagonAdapter extends SurfaceShape implements Moveable{
 	
 	@Override
 	public void fill(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 	
 	@Override

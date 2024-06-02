@@ -10,9 +10,7 @@ public class Rectangle extends SurfaceShape {
 	private int height;
 	private int width;
 	
-	public Rectangle() {
-
-	}
+	public Rectangle() { }
 	
 	public Rectangle(Point upperLeftPoint, int height, int width) {
 		this.upperLeftPoint = upperLeftPoint;

@@ -9,9 +9,7 @@ public class Point extends Shape {
 	private int x;
 	private int y;
 	
-	public Point() {
-		
-	}
+	public Point() { }
 	
 	public Point(int x, int y) {
 		this.x=x;

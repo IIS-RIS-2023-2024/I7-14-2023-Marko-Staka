@@ -31,19 +31,18 @@ public class MakingShapeService {
 	}
 	
 	public Shape makeShape(MouseEvent e) {
-		if (frame.gettglPoint().isSelected()) {
+		if (frame.gettglPoint().isSelected()) 
 			return makePoint(e);
-		} else if (frame.gettglLine().isSelected()) {
+		else if (frame.gettglLine().isSelected()) 
 			return makeLine(e);
-		} else if (frame.gettglRectangle().isSelected()) {
+		else if (frame.gettglRectangle().isSelected()) 
 			return makeRectangle(e);
-		} else if (frame.gettglCircle().isSelected()) {
+		else if (frame.gettglCircle().isSelected()) 
 			return makeCircle(e);
-		} else if (frame.gettglDonut().isSelected()) {
+		else if (frame.gettglDonut().isSelected()) 
 			return makeDonut(e);
-		} else if (frame.gettglHexagon().isSelected()) {
+		else if (frame.gettglHexagon().isSelected()) 
 			return makeHexagon(e);
-		}
 		return null;
 	}	
 	

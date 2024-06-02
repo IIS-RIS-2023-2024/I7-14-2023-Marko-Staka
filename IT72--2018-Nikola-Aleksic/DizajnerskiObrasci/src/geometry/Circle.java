@@ -9,9 +9,7 @@ public class Circle extends SurfaceShape{
 	private Point center = new Point();
 	private int radius;
 	
-	public Circle() {
-		
-	}
+	public Circle() { }
 	
 	public Circle(Point center, int radius) {
 		this.center=center;
